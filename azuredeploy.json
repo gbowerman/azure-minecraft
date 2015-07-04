@@ -208,7 +208,7 @@
             "typeHandlerVersion": "1.2",
             "settings": {
                 "fileUris": [
-                    "https://raw.githubusercontent.com/gbowerman/Azure-Minecraft/master/install_minecraft.sh"
+                    "https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/install_minecraft.sh"
                 ],
                 "commandToExecute": "[concat('sh install_minecraft.sh ', parameters('minecraftUser'), parameters('minecraftUUID'))]"
             }
