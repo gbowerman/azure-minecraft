@@ -55,6 +55,7 @@ sh -c "echo 'respawn' >> /etc/init/minecraft-server.conf"
 sh -c "echo 'respawn limit 20 5' >> /etc/init/minecraft-server.conf"
 printf 'exec /usr/bin/java -Xms%s -Xmx%s -jar minecraft_server.1.8.jar nogui' $memoryAlloc $memoryAlloc >> /etc/init/minecraft-server.conf
 
-sh -c "echo '[\n {\n  \"uuid\":\"$2\",\n  \"name\":\"$1\",\n  \"level\":4\n }\n]' >> /srv/minecraft_server/ops.json"
+UUID="`wget -q  -O - http://api.ketrwu.de/$1`"
+sh -c "echo '[\n {\n  \"uuid\":\"$UUID\",\n  \"name\":\"$1\",\n  \"level\":4\n }\n]' >> /srv/minecraft_server/ops.json"
 
 start minecraft-server
