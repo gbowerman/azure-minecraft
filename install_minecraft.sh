@@ -1,5 +1,5 @@
 #!/bin/sh
-# Custom Minecraft server install script for Ubuntu
+# Custom Minecraft server install script for Ubuntu 15.04
 # $1 = Minecraft user name
 # $2 = difficulty
 # $3 = level-name
@@ -63,16 +63,12 @@ touch /srv/minecraft_server/eula.txt
 echo 'eula=true' >> /srv/minecraft_server/eula.txt
 
 # create a service
-touch /etc/init/minecraft-server.conf
-echo 'start on runlevel [2345]' >> /etc/init/minecraft-server.conf
-echo 'stop on runlevel [^2345]' >> /etc/init/minecraft-server.conf
-echo 'console log' >> /etc/init/minecraft-server.conf
-echo 'chdir /srv/minecraft_server' >> /etc/init/minecraft-server.conf
-echo 'setuid minecraft' >> /etc/init/minecraft-server.conf
-echo 'setgid minecraft' >> /etc/init/minecraft-server.conf
-echo 'respawn' >> /etc/init/minecraft-server.conf
-echo 'respawn limit 20 5' >> /etc/init/minecraft-server.conf
-printf 'exec /usr/bin/java -Xms%s -Xmx%s -jar minecraft_server.1.8.jar nogui' $memoryAlloc $memoryAlloc >> /etc/init/minecraft-server.conf
+touch /etc/systemd/system/minecraft-server.service
+echo '[Unit]\nDescription=Minecraft Service\nAfter=rc-local.service\n' >> /etc/systemd/system/minecraft-server.service
+echo '[Service]\nWorkingDirectory=/srv/minecraft_server' >> /etc/systemd/system/minecraft-server.service
+printf 'ExecStart=/usr/bin/java -Xms%s -Xmx%s -jar /srv/minecraft_server/minecraft_server.1.8.jar nogui' $memoryAlloc $memoryAlloc  >> /etc/systemd/system/minecraft-server.service
+echo 'ExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\nRestart=on-failure\n' >> /etc/systemd/system/minecraft-server.service
+echo '[Install]\nWantedBy=multi-user.target\nAlias=minecraft-server.service' >> /etc/systemd/system/minecraft-server.service
 
 # create and set permissions on user access JSON files
 touch /srv/minecraft_server/banned-players.json
@@ -101,4 +97,4 @@ sh -c "echo 'spawn-monsters=$7' >> /srv/minecraft_server/server.properties"
 sh -c "echo 'generate-structures=$8' >> /srv/minecraft_server/server.properties"
 sh -c "echo 'level-seed=$9' >> /srv/minecraft_server/server.properties"
 
-start minecraft-server
+systemctl start minecraft-server
