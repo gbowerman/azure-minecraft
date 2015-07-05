@@ -1,4 +1,16 @@
 #!/bin/sh
+# Custom Minecraft server install script for Ubuntu
+# $1 = Minecraft user name
+# $2 = difficulty
+# $3 = level-name
+# $4 = gamemode
+# $5 = white-list
+# $6 = enable-command-block
+# $7 = spawn-monsters
+# $8 = generate-structures
+# $9 = level-seed
+
+# add and update repos
 while ! echo y | apt-get install -y software-properties-common; do
     sleep 10
     apt-get install -y software-properties-common
@@ -14,6 +26,7 @@ while ! echo y | apt-get update; do
     apt-get update
 done
 
+# instlal Java8
 echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
 
 while ! echo y | apt-get install -y oracle-java8-installer; do
@@ -21,19 +34,23 @@ while ! echo y | apt-get install -y oracle-java8-installer; do
     apt-get install -y oracle-java8-installer
 done
 
+# create user and install folder
 adduser --system --no-create-home --home /srv/minecraft-server minecraft
 addgroup --system minecraft
 adduser minecraft minecraft
 mkdir /srv/minecraft_server
 cd /srv/minecraft_server
 
+# download the server jar
 while ! echo y | wget https://s3.amazonaws.com/Minecraft.Download/versions/1.8/minecraft_server.1.8.jar; do
     sleep 10
     wget https://s3.amazonaws.com/Minecraft.Download/versions/1.8/minecraft_server.1.8.jar
 done
 
+# set permissions on install folder
 chown -R minecraft /srv/minecraft_server
 
+# adjust memory usage depending on VM size
 totalMem=$(free -m | awk '/Mem:/ { print $2 }')
 if [ $totalMem -lt 1024 ]; then
     memoryAlloc=512m
@@ -41,9 +58,11 @@ else
     memoryAlloc=1024m
 fi
 
+# create the uela file
 touch /srv/minecraft_server/eula.txt
 echo 'eula=true' >> /srv/minecraft_server/eula.txt
 
+# create a service
 touch /etc/init/minecraft-server.conf
 echo 'start on runlevel [2345]' >> /etc/init/minecraft-server.conf
 echo 'stop on runlevel [^2345]' >> /etc/init/minecraft-server.conf
@@ -55,9 +74,21 @@ echo 'respawn' >> /etc/init/minecraft-server.conf
 echo 'respawn limit 20 5' >> /etc/init/minecraft-server.conf
 printf 'exec /usr/bin/java -Xms%s -Xmx%s -jar minecraft_server.1.8.jar nogui' $memoryAlloc $memoryAlloc >> /etc/init/minecraft-server.conf
 
+# create and set permissions on user access JSON files
+touch /srv/minecraft_server/banned-players.json
+chown minecraft:minecraft /srv/minecraft_server/banned-players.json
+touch /srv/minecraft_server/banned-ips.json
+chown minecraft:minecraft /srv/minecraft_server/banned-ips.json
+touch /srv/minecraft_server/whitelist.json
+chown minecraft:minecraft /srv/minecraft_server/whitelist.json
+
+# create a valid operators file using the ketrwu.de API
+touch /srv/minecraft_server/ops.json
+chown minecraft:minecraft /srv/minecraft_server/ops.json
 UUID="`wget -q  -O - http://api.ketrwu.de/$1/`"
 sh -c "echo '[\n {\n  \"uuid\":\"$UUID\",\n  \"name\":\"$1\",\n  \"level\":4\n }\n]' >> /srv/minecraft_server/ops.json"
 
+# set user preferences in server.properties
 touch /srv/minecraft_server/server.properties
 chown minecraft:minecraft /srv/minecraft_server/server.properties
 # echo 'max-tick-time=-1' >> /srv/minecraft_server/server.properties
