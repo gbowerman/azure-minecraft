@@ -47,7 +47,7 @@ echo 'eula=true' >> /srv/minecraft_server/eula.txt
 touch /etc/init/minecraft-server.conf
 echo 'start on runlevel [2345]' >> /etc/init/minecraft-server.conf
 echo 'stop on runlevel [^2345]' >> /etc/init/minecraft-server.conf
-echo 'console log' >> /etc/init/minecraft-server.conf"
+echo 'console log' >> /etc/init/minecraft-server.conf
 echo 'chdir /srv/minecraft_server' >> /etc/init/minecraft-server.conf
 echo 'setuid minecraft' >> /etc/init/minecraft-server.conf
 echo 'setgid minecraft' >> /etc/init/minecraft-server.conf
@@ -59,14 +59,14 @@ UUID="`wget -q  -O - http://api.ketrwu.de/$1/`"
 echo '[\n {\n  \"uuid\":\"$UUID\",\n  \"name\":\"$1\",\n  \"level\":4\n }\n]' >> /srv/minecraft_server/ops.json
 
 touch /srv/minecraft_server/server.properties
-echo 'max-tick-time=-1' >> server.properties
-echo 'difficulty=$2' >> server.properties
-echo 'level-name=$3' >> server.properties
-echo 'gamemode=$4' >> server.properties
-echo 'white-list=$5' >> server.properties
-echo 'enable-command-block=$6' >> server.properties
-echo 'spawn-monsters=$7' >> server.properties
-echo 'generate-structures=$8' >> server.properties
-echo 'level-seed=$9' >> server.properties
+echo 'max-tick-time=-1' >> /srv/minecraft_server/server.properties
+echo 'difficulty=$2' >> /srv/minecraft_server/server.properties
+echo 'level-name=$3' >> /srv/minecraft_server/server.properties
+echo 'gamemode=$4' >> /srv/minecraft_server/server.properties
+echo 'white-list=$5' >> /srv/minecraft_serverserver.properties
+echo 'enable-command-block=$6' >> /srv/minecraft_server/server.properties
+echo 'spawn-monsters=$7' >> /srv/minecraft_server/server.properties
+echo 'generate-structures=$8' >> /srv/minecraft_server/server.properties
+echo 'level-seed=$9' >> /srv/minecraft_server/server.properties
 
 start minecraft-server
