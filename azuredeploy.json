@@ -58,7 +58,7 @@
         "storageAccountType": "Standard_LRS",
         "publicIPAddressName": "myPublicIP",
         "publicIPAddressType": "Dynamic",
-	"ubuntuOSVersion": "14.10",
+	"ubuntuOSVersion": "15.04",
         "vmStorageAccountContainerName": "vhds",
         "vmName": "MyMinecraftServer",
         "vmSize": "Standard_A0",
@@ -194,7 +194,7 @@
                 "fileUris": [
                     "https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/install_minecraft.sh"
                 ],
-                "commandToExecute": "[concat('sh install_minecraft.sh ', parameters('minecraftUser'), parameters('minecraftUUID'))]"
+                "commandToExecute": "[concat('sh install_minecraft.sh ', parameters('minecraftUser'), ' ', parameters('minecraftUUID'))]"
             }
         }
     }
