@@ -136,7 +136,7 @@
         "storageAccountType": "Standard_LRS",
         "publicIPAddressName": "myPublicIP",
         "publicIPAddressType": "Dynamic",
-	"ubuntuOSVersion": "14.10",
+	"ubuntuOSVersion": "15.04",
         "vmStorageAccountContainerName": "vhds",
         "vmName": "[parameters('dnsNameForPublicIP')]",
         "vmSize": "Standard_A1",
