@@ -14,11 +14,11 @@ while ! echo y | apt-get update; do
     apt-get update
 done
 
-echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
 
-while ! echo y | apt-get install -y oracle-java7-installer; do
+while ! echo y | apt-get install -y oracle-java8-installer; do
     sleep 10
-    apt-get install -y oracle-java7-installer
+    apt-get install -y oracle-java8-installer
 done
 
 adduser --system --no-create-home --home /srv/minecraft-server minecraft
@@ -56,17 +56,17 @@ echo 'respawn limit 20 5' >> /etc/init/minecraft-server.conf
 printf 'exec /usr/bin/java -Xms%s -Xmx%s -jar minecraft_server.1.8.jar nogui' $memoryAlloc $memoryAlloc >> /etc/init/minecraft-server.conf
 
 UUID="`wget -q  -O - http://api.ketrwu.de/$1/`"
-echo '[\n {\n  \"uuid\":\"$UUID\",\n  \"name\":\"$1\",\n  \"level\":4\n }\n]' >> /srv/minecraft_server/ops.json
+sh -c "echo '[\n {\n  \"uuid\":\"$UUID\",\n  \"name\":\"$1\",\n  \"level\":4\n }\n]' >> /srv/minecraft_server/ops.json"
 
 touch /srv/minecraft_server/server.properties
 echo 'max-tick-time=-1' >> /srv/minecraft_server/server.properties
-echo 'difficulty=$2' >> /srv/minecraft_server/server.properties
-echo 'level-name=$3' >> /srv/minecraft_server/server.properties
-echo 'gamemode=$4' >> /srv/minecraft_server/server.properties
-echo 'white-list=$5' >> /srv/minecraft_serverserver.properties
-echo 'enable-command-block=$6' >> /srv/minecraft_server/server.properties
-echo 'spawn-monsters=$7' >> /srv/minecraft_server/server.properties
-echo 'generate-structures=$8' >> /srv/minecraft_server/server.properties
-echo 'level-seed=$9' >> /srv/minecraft_server/server.properties
+sh -c "echo 'difficulty=$2' >> /srv/minecraft_server/server.properties"
+sh -c "echo 'level-name=$3' >> /srv/minecraft_server/server.properties"
+sh -c "echo 'gamemode=$4' >> /srv/minecraft_server/server.properties"
+sh -c "echo 'white-list=$5' >> /srv/minecraft_serverserver.properties"
+sh -c "echo 'enable-command-block=$6' >> /srv/minecraft_server/server.properties"
+sh -c "echo 'spawn-monsters=$7' >> /srv/minecraft_server/server.properties"
+sh -c "echo 'generate-structures=$8' >> /srv/minecraft_server/server.properties"
+sh -c "echo 'level-seed=$9' >> /srv/minecraft_server/server.properties"
 
 start minecraft-server
