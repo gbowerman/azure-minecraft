@@ -59,6 +59,7 @@ UUID="`wget -q  -O - http://api.ketrwu.de/$1/`"
 echo '[\n {\n  \"uuid\":\"$UUID\",\n  \"name\":\"$1\",\n  \"level\":4\n }\n]' >> /srv/minecraft_server/ops.json
 
 touch /srv/minecraft_server/server.properties
+echo 'max-tick-time=-1' >> server.properties
 echo 'difficulty=$2' >> server.properties
 echo 'level-name=$3' >> server.properties
 echo 'gamemode=$4' >> server.properties
