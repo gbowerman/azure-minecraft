@@ -58,7 +58,7 @@
         "storageAccountType": "Standard_LRS",
         "publicIPAddressName": "myPublicIP",
         "publicIPAddressType": "Dynamic",
-	"ubuntuOSVersion": "15.04",
+	"ubuntuOSVersion": "14.10",
         "vmStorageAccountContainerName": "vhds",
         "vmName": "MyMinecraftServer",
         "vmSize": "Standard_A0",
