@@ -26,7 +26,7 @@ while ! echo y | apt-get update; do
     apt-get update
 done
 
-# instlal Java8
+# Install Java8
 echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
 
 while ! echo y | apt-get install -y oracle-java8-installer; do
