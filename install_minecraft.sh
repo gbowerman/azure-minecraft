@@ -42,20 +42,30 @@ else
 fi
 
 touch /srv/minecraft_server/eula.txt
-sh -c "echo 'eula=true' >> /srv/minecraft_server/eula.txt"
+echo 'eula=true' >> /srv/minecraft_server/eula.txt
 
 touch /etc/init/minecraft-server.conf
-sh -c "echo 'start on runlevel [2345]' >> /etc/init/minecraft-server.conf"
-sh -c "echo 'stop on runlevel [^2345]' >> /etc/init/minecraft-server.conf"
-sh -c "echo 'console log' >> /etc/init/minecraft-server.conf"
-sh -c "echo 'chdir /srv/minecraft_server' >> /etc/init/minecraft-server.conf"
-sh -c "echo 'setuid minecraft' >> /etc/init/minecraft-server.conf"
-sh -c "echo 'setgid minecraft' >> /etc/init/minecraft-server.conf"
-sh -c "echo 'respawn' >> /etc/init/minecraft-server.conf"
-sh -c "echo 'respawn limit 20 5' >> /etc/init/minecraft-server.conf"
+echo 'start on runlevel [2345]' >> /etc/init/minecraft-server.conf
+echo 'stop on runlevel [^2345]' >> /etc/init/minecraft-server.conf
+echo 'console log' >> /etc/init/minecraft-server.conf"
+echo 'chdir /srv/minecraft_server' >> /etc/init/minecraft-server.conf
+echo 'setuid minecraft' >> /etc/init/minecraft-server.conf
+echo 'setgid minecraft' >> /etc/init/minecraft-server.conf
+echo 'respawn' >> /etc/init/minecraft-server.conf
+echo 'respawn limit 20 5' >> /etc/init/minecraft-server.conf
 printf 'exec /usr/bin/java -Xms%s -Xmx%s -jar minecraft_server.1.8.jar nogui' $memoryAlloc $memoryAlloc >> /etc/init/minecraft-server.conf
 
 UUID="`wget -q  -O - http://api.ketrwu.de/$1/`"
-sh -c "echo '[\n {\n  \"uuid\":\"$UUID\",\n  \"name\":\"$1\",\n  \"level\":4\n }\n]' >> /srv/minecraft_server/ops.json"
+echo '[\n {\n  \"uuid\":\"$UUID\",\n  \"name\":\"$1\",\n  \"level\":4\n }\n]' >> /srv/minecraft_server/ops.json
+
+touch /srv/minecraft_server/server.properties
+echo 'difficulty=$2' >> server.properties
+echo 'level-name=$3' >> server.properties
+echo 'gamemode=$4' >> server.properties
+echo 'white-list=$5' >> server.properties
+echo 'enable-command-block=$6' >> server.properties
+echo 'spawn-monsters=$7' >> server.properties
+echo 'generate-structures=$8' >> server.properties
+echo 'level-seed=$9' >> server.properties
 
 start minecraft-server

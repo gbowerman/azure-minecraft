@@ -38,6 +38,90 @@
             "metadata": {
                   "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
             }
+        },
+        "difficulty": {
+            "type": "string",
+            "defaultValue": "1",
+            "allowedValues": [
+                "0",
+                "1",
+                "2",
+                "3"
+            ],
+            "metadata": {
+                "description": "0 - Peaceful, 1 - Easy, 2 - Normal, 3 - Hard"
+            }
+        },
+        "level-name": {
+            "type": "string",
+            "defaultValue": "world",
+            "metadata": {
+                "description": "Name of your world"
+            }
+        },
+        "gamemode": {
+            "type": "string",
+            "defaultValue": "0",
+            "allowedValues": [
+                "0",
+                "1",
+                "2",
+                "3"
+            ],
+            "metadata": {
+                "description": "0 - Survival, 1 - Creative, 2 - Adventure, 3 - Spectator"
+            }
+        },
+        "white-list": {
+            "type": "string",
+            "defaultValue": "false",
+            "allowedValues": [
+                "false",
+                "true"
+            ],
+            "metadata": {
+                "description": "Only ops and whitelisted players can connect"
+            }
+        },
+        "enable-command-block": {
+            "type": "string",
+            "defaultValue": "false",
+            "allowedValues": [
+                "false",
+                "true"
+            ],
+            "metadata": {
+                "description": "enable command blocks"
+            }
+        },
+        "spawn-monsters": {
+            "type": "string",
+            "defaultValue": "true",
+            "allowedValues": [
+                "false",
+                "true"
+            ],
+            "metadata": {
+                "description": "Enables monster spawning"
+            }
+        },
+        "generate-structures": {
+            "type": "string",
+            "defaultValue": "true",
+            "allowedValues": [
+                "false",
+                "true"
+            ],
+            "metadata": {
+                "description": "Generates villages etc."
+            }
+        },
+        "level-seed": {
+            "type": "string",
+            "defaultValue": " ",
+            "metadata": {
+                "description": "Add a seed for your world"
+            }
         }
     },
     "variables": {
@@ -55,7 +139,7 @@
 	"ubuntuOSVersion": "14.10",
         "vmStorageAccountContainerName": "vhds",
         "vmName": "[parameters('dnsNameForPublicIP')]",
-        "vmSize": "Standard_A0",
+        "vmSize": "Standard_A1",
         "virtualNetworkName": "MyVNET",
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
         "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]"
@@ -188,7 +272,7 @@
                 "fileUris": [
                     "https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/install_minecraft.sh"
                 ],
-                "commandToExecute": "[concat('sh install_minecraft.sh ', parameters('minecraftUser'))]"
+                "commandToExecute": "[concat('sh install_minecraft.sh ', parameters('minecraftUser'), ' ', parameters('difficulty'), ' ', parameters('level-name'), ' ', parameters('gamemode'), ' ', parameters('white-list'), ' ', parameters('enable-command-block'), ' ', parameters('spawn-monsters'), ' ', parameters('generate-structures'), ' ', parameters('level-seed'))]"
             }
         }
     }
