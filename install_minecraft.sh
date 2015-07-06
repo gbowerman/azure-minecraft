@@ -91,7 +91,7 @@ chown minecraft:minecraft /srv/minecraft_server/server.properties
 sh -c "echo 'difficulty=$2' >> /srv/minecraft_server/server.properties"
 sh -c "echo 'level-name=$3' >> /srv/minecraft_server/server.properties"
 sh -c "echo 'gamemode=$4' >> /srv/minecraft_server/server.properties"
-sh -c "echo 'white-list=$5' >> /srv/minecraft_serverserver.properties"
+sh -c "echo 'white-list=$5' >> /srv/minecraft_server/server.properties"
 sh -c "echo 'enable-command-block=$6' >> /srv/minecraft_server/server.properties"
 sh -c "echo 'spawn-monsters=$7' >> /srv/minecraft_server/server.properties"
 sh -c "echo 'generate-structures=$8' >> /srv/minecraft_server/server.properties"
