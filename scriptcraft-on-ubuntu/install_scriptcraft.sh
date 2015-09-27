@@ -80,16 +80,16 @@ printf '<operators>\n  <tableProperties>\n    ' > $scriptcraft_server_path/db/op
 printf '<id auto-increment=\"true\" data-type=\"INTEGER\" column-type=\"PRIMARY\" is-list=\"false\" not-null=\"false\" />\n' >> $scriptcraft_server_path/db/operators.xml
 printf '    <player auto-increment=\"false\" data-type=\"STRING\" column-type=\"NORMAL\" is-list=\"false\" not-null=\"false\" />\n' >> $scriptcraft_server_path/db/operators.xml
 printf '  </tableProperties>\n  <entry>\n' >> $scriptcraft_server_path/db/operators.xml
-printf '    <id<1</id>\n    <player>%s</player>\n' $UUID >> $scriptcraft_server_path/db/operators.xml
+printf '    <id>1</id>\n    <player>%s</player>\n' $UUID >> $scriptcraft_server_path/db/operators.xml
 printf '  </entry>\n</operators>' >> $scriptcraft_server_path/db/operators.xml
-printf '\n%s' $1 >> $scriptcraft_server_path/config/ops.cfg
+printf '%s' $1 >> $scriptcraft_server_path/config/ops.cfg
 
 # create a valid whitelist file
 printf '<whitelist>\n  <tableProperties>\n    ' > $scriptcraft_server_path/db/whitelist.xml
 printf '<id auto-increment=\"true\" data-type=\"INTEGER\" column-type=\"PRIMARY\" is-list=\"false\" not-null=\"false\" />\n' >> $scriptcraft_server_path/db/whitelist.xml
 printf '    <player auto-increment=\"false\" data-type=\"STRING\" column-type=\"NORMAL\" is-list=\"false\" not-null=\"false\" />\n' >> $scriptcraft_server_path/db/whitelist.xml
 printf '  </tableProperties>\n  <entry>\n' >> $scriptcraft_server_path/db/whitelist.xml
-printf '    <id<1</id>\n    <player>%s</player>\n' $UUID >> $scriptcraft_server_path/db/whitelist.xml
+printf '    <id>1</id>\n    <player>%s</player>\n' $UUID >> $scriptcraft_server_path/db/whitelist.xml
 printf '    <uuid>%s</uuid>\n' $UUID >> $scriptcraft_server_path/db/whitelist.xml
 printf '  </entry>\n</whitelist>' >> $scriptcraft_server_path/db/whitelist.xml
 
