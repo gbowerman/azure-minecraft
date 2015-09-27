@@ -32,6 +32,12 @@ while ! echo y | apt-get install -y oracle-java8-installer; do
     apt-get install -y oracle-java8-installer
 done
 
+# install unzip
+while ! echo y | apt-get install -y unzip; do
+    sleep 10
+    apt-get install -y unzip
+done
+
 # create user and install folder
 adduser --system --no-create-home --home /srv/scriptcraft-server $minecraft_user
 addgroup --system $minecraft_group
@@ -70,7 +76,7 @@ printf '[Install]\nWantedBy=multi-user.target\nAlias=scriptcraft-server.service'
 mojang_output="`wget -qO- $UUID_URL`"
 rawUUID=${mojang_output:7:32}
 UUID=${rawUUID:0:8}-${rawUUID:8:4}-${rawUUID:12:4}-${rawUUID:16:4}-${rawUUID:20:12}
-printf '<operators>\n  <tableProperties>\n    ' > $UUID $scriptcraft_server_path/db/operators.xml
+printf '<operators>\n  <tableProperties>\n    ' > $scriptcraft_server_path/db/operators.xml
 printf '<id auto-increment=\"true\" data-type=\"INTEGER\" column-type=\"PRIMARY\" is-list=\"false\" not-null=\"false\" />\n' >> $scriptcraft_server_path/db/operators.xml
 printf '    <player auto-increment=\"false\" data-type=\"STRING\" column-type=\"NORMAL\" is-list=\"false\" not-null=\"false\" />\n' >> $scriptcraft_server_path/db/operators.xml
 printf '  </tableProperties>\n  <entry>\n' >> $scriptcraft_server_path/db/operators.xml
@@ -79,7 +85,7 @@ printf '  </entry>\n</operators>' >> $scriptcraft_server_path/db/operators.xml
 printf '\n%s' $1 >> $scriptcraft_server_path/config/ops.cfg
 
 # create a valid whitelist file
-printf '<whitelist>\n  <tableProperties>\n    ' > $UUID $scriptcraft_server_path/db/whitelist.xml
+printf '<whitelist>\n  <tableProperties>\n    ' > $scriptcraft_server_path/db/whitelist.xml
 printf '<id auto-increment=\"true\" data-type=\"INTEGER\" column-type=\"PRIMARY\" is-list=\"false\" not-null=\"false\" />\n' >> $scriptcraft_server_path/db/whitelist.xml
 printf '    <player auto-increment=\"false\" data-type=\"STRING\" column-type=\"NORMAL\" is-list=\"false\" not-null=\"false\" />\n' >> $scriptcraft_server_path/db/whitelist.xml
 printf '  </tableProperties>\n  <entry>\n' >> $scriptcraft_server_path/db/whitelist.xml
