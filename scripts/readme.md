@@ -12,5 +12,6 @@ Usage: mineuuid.sh minecraft_user
 
 Example:
 ./mineuuid.sh notch
+
 069a79f4-44e9-4726-a5be-fca90e38aaf5
 
