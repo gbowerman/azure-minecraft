@@ -1,6 +1,6 @@
 # Install ComputerCraftEdu server on an Ubuntu Virtual Machine using the Linux Custom Script Extension
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgbowerman%2Fazure-minecraft%2Fmaster%2Fcomputercraft-on-ubuntu%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgbowerman%2Fazure-minecraft%2Fmaster%2Fcomputercraftedu-on-ubuntu%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
