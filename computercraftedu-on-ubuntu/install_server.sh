@@ -49,7 +49,7 @@ while ! echo y | wget http://computercraftedu.com/downloads/ComputerCraftPlusCom
     sleep 10
     wget http://computercraftedu.com/downloads/ComputerCraftPlusComputerCraftEdu1.74.jar
 done
-while ! echo y | wget http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.7.10-10.13.4.1517-1.7.10/forge-1.7.10-10.13.4.1517-1.7.10-installer.jar
+while ! echo y | wget http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.7.10-10.13.4.1517-1.7.10/forge-1.7.10-10.13.4.1517-1.7.10-installer.jar; do
     sleep 10
     wget http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.7.10-10.13.4.1517-1.7.10/forge-1.7.10-10.13.4.1517-1.7.10-installer.jar
 done
