@@ -8,5 +8,7 @@ This template deploys and sets up a customized ComputerCraftcraftEdu server on a
 
 You can set common Minecraft server properties as parameters at deployment time. Once the deployment is successful you can connect to the DNS address of the VM with a ComputerCraftEdu compatible launcher. 
 
+See <a href="https://msftstack.wordpress.com/2015/10/27/azure-templates-for-computercraftedu-and-scriptcraft-servers/">Azure templates for ComputerCraftEdu and ScriptCraft servers</a> for more details.
+
 The following server configuration parameters can be set at deployment time: Minecraft user name.
 
