@@ -81,7 +81,7 @@
               "direction": "Inbound"
             }
           },
-         {
+          {
             "name": "minecraft",
             "properties": {
               "description": "Minecraft server port",
