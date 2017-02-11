@@ -4,7 +4,7 @@
 
 # check for a command line argument
 if [[ ! $# -eq 1 ]] ; then
-    echo The Minecraft server version needs to be passed as a command line argument, e.g. sudo $0 1.10
+    echo The Minecraft server version needs to be passed as a command line argument, e.g. sudo $0 1.10.2
     exit 1
 fi
 
