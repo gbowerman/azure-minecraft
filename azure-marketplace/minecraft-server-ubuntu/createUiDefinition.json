@@ -106,19 +106,6 @@
                         }
                     },
                     {
-                        "name": "minecraftServerVersion",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Minecraft server version",
-                        "defaultValue": "1.11.2",
-                        "toolTip": "Enter the Minecraft server version",
-                        "constraints": {
-                            "required": true,
-                            "regex": "^[0-9.]{5,8}$",
-                            "validationMessage": "Expecting numbers separated by dots, between 5 and 8 characters."
-                        },
-                        "visible": true
-                    },
-                    {
                         "name": "difficulty",
                         "type": "Microsoft.Common.DropDown",
                         "label": "difficulty",
@@ -277,7 +264,6 @@
             "dnsNameForPublicIP": "[steps('virtualMachineSettings').dnsNameForPublicIP.domainNameLabel]",
             "virtualMachineSize": "[steps('virtualMachineSettings').virtualMachineSize]",
             "minecraftUser": "[steps('minecraftServerSettings').minecraftUser]",
-            "minecraftServerVersion": "[steps('minecraftServerSettings').minecraftServerVersion]",
             "difficulty": "[steps('minecraftServerSettings').difficulty]",
             "level-name": "[steps('minecraftServerSettings').level-name]",
             "gamemode": "[steps('minecraftServerSettings').gamemode]",
