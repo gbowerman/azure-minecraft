@@ -41,13 +41,23 @@ cd $minecraft_server_path
 # set permissions on install folder
 chown -R $minecraft_user $minecraft_server_path
 
-# get the server zip file
-curl 
+# get and unzip the server zip file
+curl "https://github.com/gbowerman/azure-minecraft/blob/master/mcedu/server/dedicated_server.zip?raw=true" > $minecraft_server_path/dedicated_server.zip
+unzip $minecraft_server_path/dedicated_server.zip -d $minecraft_server_path
+chmod +x $minecraft_server_path/dedicated_server/output/mcpe_server
+
+# create a launch file
+touch $minecraft_server_path/dedicated_server/output/launch.sh
+printf 'cd %s/dedicated_server/output\n' $minecraft_server_path >> $minecraft_server_path/dedicated_server/output/launch.sh
+printf 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%s/dedicated_server/output\n' $minecraft_server_path >> $minecraft_server_path/dedicated_server/output/launch.sh
+printf './mcpe_server' >> $minecraft_server_path/dedicated_server/output/launch.sh
+chmod +x $minecraft_server_path/dedicated_server/output/launch.sh
+
 # create a service
 touch /etc/systemd/system/minecraft-server.service
 printf '[Unit]\nDescription=Minecraft Service\nAfter=rc-local.service\n' >> /etc/systemd/system/minecraft-server.service
 printf '[Service]\nWorkingDirectory=%s\n' $minecraft_server_path >> /etc/systemd/system/minecraft-server.service
-printf 'ExecStart=/usr/bin/java -Xms%s -Xmx%s -jar %s/%s nogui\n' $memoryAllocs $memoryAllocx $minecraft_server_path $server_jar >> /etc/systemd/system/minecraft-server.service
+printf 'ExecStart=%s/dedicated_server/output/launch.sh\n' $minecraft_server_path >> /etc/systemd/system/minecraft-server.service
 printf 'ExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\nRestart=on-failure\n' >> /etc/systemd/system/minecraft-server.service
 printf '[Install]\nWantedBy=multi-user.target\nAlias=minecraft-server.service' >> /etc/systemd/system/minecraft-server.service
 chmod +x /etc/systemd/system/minecraft-server.service
