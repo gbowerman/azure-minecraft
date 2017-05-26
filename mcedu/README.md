@@ -7,3 +7,7 @@ You can set common Minecraft server properties as parameters at deployment time.
 
 The following Minecraft PE server configuration parameters can be set at deployment time: XBox Live XUID, difficulty, level-name, gamemode, white-list,  level-seed.
 
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgbowerman%2Fazure-minecraft%2Fmaster%2Fmcedu%2FmainTemplate.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+
