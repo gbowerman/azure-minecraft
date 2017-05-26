@@ -54,19 +54,19 @@ chmod +x $minecraft_server_path/launch.sh
 touch /etc/systemd/system/minecraft-server.service
 printf '[Unit]\nDescription=Minecraft Service\nAfter=rc-local.service\n' >> /etc/systemd/system/minecraft-server.service
 printf '[Service]\nWorkingDirectory=%s\n' $minecraft_server_path >> /etc/systemd/system/minecraft-server.service
-printf 'ExecStart=%s/launch.sh\n' $minecraft_server_path >> /etc/systemd/system/minecraft-server.service
+printf "ExecStart=/bin/sh -c '%s/launch.sh >/tmp/minecraft.log 2>&1'\n" $minecraft_server_path >> /etc/systemd/system/minecraft-server.service
 printf 'ExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\nRestart=on-failure\n' >> /etc/systemd/system/minecraft-server.service
 printf '[Install]\nWantedBy=multi-user.target\nAlias=minecraft-server.service' >> /etc/systemd/system/minecraft-server.service
 chmod +x /etc/systemd/system/minecraft-server.service
 
 # create and set permissions on user access JSON files
 touch $minecraft_server_path/whitelist.json
-printf '[\n {\n  \"xuid\":\"%s\", \"ignoresPlayerLimit\":true\n }\n]' $1 >> $minecraft_server_path/whitelist.json
+printf '[{\"xuid\":\"%s\", \"ignoresPlayerLimit\":true}]' $1 >> $minecraft_server_path/whitelist.json
 chown $minecraft_user:$minecraft_group $minecraft_server_path/whitelist.json
 
 # create a valid operators file using the Mojang API
 touch $minecraft_server_path/ops.json
-printf '[\n {\n  \"xuid\":\"%s\"\n }\n]' $1 >> $minecraft_server_path/ops.json
+printf '[{\"xuid\":\"%s\"}]\n' $1 >> $minecraft_server_path/ops.json
 chown $minecraft_user:$minecraft_group $minecraft_server_path/ops.json
 
 # set user preferences in server.properties
@@ -77,5 +77,6 @@ printf 'level-name=%s\n' $3 >> $minecraft_server_path/server.properties
 printf 'gamemode=%s\n' $4 >> $minecraft_server_path/server.properties
 printf 'white-list=%s\n' $5 >> $minecraft_server_path/server.properties
 printf 'level-seed=%s\n' $6 >> $minecraft_server_path/server.properties
+printf 'allow-cheats=true\n' >> $minecraft_server_path/server.properties
 
 systemctl start minecraft-server
