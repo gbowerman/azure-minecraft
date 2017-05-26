@@ -39,7 +39,7 @@ cd $minecraft_root_path
 chown -R $minecraft_user $minecraft_root_path
 
 # get and unzip the server zip file
-curl "https://github.com/gbowerman/azure-minecraft/raw/master/mcedu/server/dedicated_server.zip" > $minecraft_root_path/dedicated_server.zip
+curl "https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/mcedu/server/dedicated_server.zip" > $minecraft_root_path/dedicated_server.zip
 unzip $minecraft_root_path/dedicated_server.zip -d $minecraft_root_path
 chmod +x $minecraft_server_path/mcpe_server
 
