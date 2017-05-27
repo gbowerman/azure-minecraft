@@ -64,7 +64,7 @@ touch $minecraft_server_path/whitelist.json
 printf '[{\"xuid\":\"%s\", \"ignoresPlayerLimit\":true}]' $1 >> $minecraft_server_path/whitelist.json
 chown $minecraft_user:$minecraft_group $minecraft_server_path/whitelist.json
 
-# create a valid operators file using the Mojang API
+# create a valid operators file using the XUID
 touch $minecraft_server_path/ops.json
 printf '[{\"xuid\":\"%s\"}]\n' $1 >> $minecraft_server_path/ops.json
 chown $minecraft_user:$minecraft_group $minecraft_server_path/ops.json
