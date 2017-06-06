@@ -4,6 +4,8 @@
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
+Warning: This template is not maintained. You're welcome to use it as a base and submit a PR to improve it though :-)
+
 This template deploys and sets up a customized Scriptcraft server on an Ubuntu Virtual Machine, with you as the operator. It also deploys an Azure Storage Account, Virtual Network, Public IP addresses and a Network Interface.
 
 You can set common Minecraft server properties as parameters at deployment time. Once the deployment is successful you can connect to the DNS address of the VM with a Minecraft launcher. 

@@ -71,6 +71,7 @@ printf '[Service]\nWorkingDirectory=%s\n' $scriptcraft_server_path >> /etc/syste
 printf 'ExecStart=/usr/bin/java -Xms%s -Xmx%s -jar %s/CanaryMod-1.2.1.jar nogui\n' $memoryAlloc $memoryAlloc $scriptcraft_server_path >> /etc/systemd/system/scriptcraft-server.service
 printf 'ExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\nRestart=on-failure\n' >> /etc/systemd/system/scriptcraft-server.service
 printf '[Install]\nWantedBy=multi-user.target\nAlias=scriptcraft-server.service' >> /etc/systemd/system/scriptcraft-server.service
+chmod +x /etc/systemd/system/minecraft-server.service
 
 # create a valid operators file using the Mojang API
 mojang_output="`wget -qO- $UUID_URL`"
