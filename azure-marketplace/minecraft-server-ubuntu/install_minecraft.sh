@@ -17,8 +17,8 @@ minecraft_group=minecraft
 UUID_URL=https://api.mojang.com/users/profiles/minecraft/$1
 
 # screen scrape the server jar location from the Minecraft server download page
-SERVER_JAR_URL=`curl https://minecraft.net/en-us/download/server | grep Minecraft\.Download | cut -d '"' -f2`
-server_jar=`echo $SERVER_JAR_URL | cut -d '/' -f7`
+SERVER_JAR_URL=`curl https://minecraft.net/en-us/download/server | grep 'Download <a' | cut -d '"' -f2`
+server_jar=server.jar
 
 # add and update repos
 while ! echo y | apt-get install -y software-properties-common; do
@@ -45,7 +45,7 @@ while ! echo y | apt-get install -y oracle-java8-installer; do
 done
 
 # create user and install folder
-adduser --system --no-create-home --home /srv/minecraft-server $minecraft_user
+adduser --system --no-create-home --home $minecraft_server_path $minecraft_user
 addgroup --system $minecraft_group
 mkdir $minecraft_server_path
 cd $minecraft_server_path
@@ -81,14 +81,6 @@ printf 'ExecStart=/usr/bin/java -Xms%s -Xmx%s -jar %s/%s nogui\n' $memoryAllocs 
 printf 'ExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\nRestart=on-failure\n' >> /etc/systemd/system/minecraft-server.service
 printf '[Install]\nWantedBy=multi-user.target\nAlias=minecraft-server.service' >> /etc/systemd/system/minecraft-server.service
 chmod +x /etc/systemd/system/minecraft-server.service
-
-# create and set permissions on user access JSON files
-touch $minecraft_server_path/banned-players.json
-chown $minecraft_user:$minecraft_group $minecraft_server_path/banned-players.json
-touch $minecraft_server_path/banned-ips.json
-chown $minecraft_user:$minecraft_group $minecraft_server_path/banned-ips.json
-touch $minecraft_server_path/whitelist.json
-chown $minecraft_user:$minecraft_group $minecraft_server_path/whitelist.json
 
 # create a valid operators file using the Mojang API
 touch $minecraft_server_path/ops.json
