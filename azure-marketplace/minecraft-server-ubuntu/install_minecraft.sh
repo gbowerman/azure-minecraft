@@ -79,7 +79,7 @@ printf '[Unit]\nDescription=Minecraft Service\nAfter=rc-local.service\n' >> /etc
 printf '[Service]\nWorkingDirectory=%s\n' $minecraft_server_path >> /etc/systemd/system/minecraft-server.service
 printf 'ExecStart=/usr/bin/java -Xms%s -Xmx%s -jar %s/%s nogui\n' $memoryAllocs $memoryAllocx $minecraft_server_path $server_jar >> /etc/systemd/system/minecraft-server.service
 printf 'ExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\nRestart=on-failure\n' >> /etc/systemd/system/minecraft-server.service
-printf '[Install]\nWantedBy=multi-user.target\nAlias=minecraft-server.service' >> /etc/systemd/system/minecraft-server.service
+printf '[Install]\nWantedBy=multi-user.target\nAlias=minecraft.service' >> /etc/systemd/system/minecraft-server.service
 chmod +x /etc/systemd/system/minecraft-server.service
 
 # create a valid operators file using the Mojang API
@@ -104,3 +104,4 @@ printf 'generate-structures=%s\n' $8 >> $minecraft_server_path/server.properties
 printf 'level-seed=%s\n' $9 >> $minecraft_server_path/server.properties
 
 systemctl start minecraft-server
+systemctl enable minecraft-server
