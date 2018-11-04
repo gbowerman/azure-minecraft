@@ -12,7 +12,7 @@
         "description": "The base URL for dependent assets",
         "artifactsBaseUrl": ""
       },
-      "defaultValue": "https://github.com/Azure/azure-quickstart-templates/tree/master/minecraft-on-ubuntu"
+      "defaultValue": "https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-ubuntu"
     },
     "minecraftUser": {
       "type": "string",
@@ -116,13 +116,13 @@
     "storageAccountType": "Standard_LRS",
     "publicIPAddressName": "minecraftpublicip",
     "publicIPAddressType": "Dynamic",
-    "ubuntuOSVersion": "16.04-LTS",
+    "ubuntuOSVersion": "18.04-LTS",
     "vmName": "minecraftvm",
     "virtualNetworkName": "minecraftvnet",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
-    "computeApiVersion": "2017-03-30",
-    "networkApiVersion": "2017-04-01"
+    "computeApiVersion": "2018-10-01",
+    "networkApiVersion": "2018-08-01"
   },
   "resources": [
     {
