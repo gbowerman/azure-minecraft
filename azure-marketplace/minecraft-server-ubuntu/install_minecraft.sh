@@ -20,34 +20,23 @@ UUID_URL=https://api.mojang.com/users/profiles/minecraft/$1
 SERVER_JAR_URL=`curl https://minecraft.net/en-us/download/server/ | grep 'Download <a' | cut -d '"' -f2`
 server_jar=server.jar
 
-# add and update repos
-while ! echo y | apt-get install -y software-properties-common; do
-    sleep 10
-    apt-get install -y software-properties-common
-done
-
-while ! echo y | apt-add-repository -y ppa:webupd8team/java; do
-    sleep 10
-    apt-add-repository -y ppa:webupd8team/java
-done
-
+# update repos
 while ! echo y | apt-get update; do
     sleep 10
     apt-get update
 done
 
-# Install Java8
-echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
-
-while ! echo y | apt-get install -y oracle-java8-installer; do
+# Install Java
+while ! echo y | apt install -y default-jre; do
     sleep 10
-    apt-get install -y oracle-java8-installer
+    apt install -y default-jre
 done
 
 # create user and install folder
+mkdir $minecraft_server_path
 adduser --system --no-create-home --home $minecraft_server_path $minecraft_user
 addgroup --system $minecraft_group
-mkdir $minecraft_server_path
+
 cd $minecraft_server_path
 
 # download the server jar
