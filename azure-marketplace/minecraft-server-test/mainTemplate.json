@@ -268,7 +268,7 @@
           "osDisk": {
             "caching": "ReadWrite",
             "createOption": "FromImage",
-            "diskSizeGB": 100
+            "diskSizeGB": "100"
           }
         },
         "networkProfile": {
