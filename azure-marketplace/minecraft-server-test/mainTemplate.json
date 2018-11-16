@@ -250,7 +250,9 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
       ],
       "tags": {
-        "minecraftuser": "[parameters('minecraftUser')]"
+        "minecraftuser": "[parameters('minecraftUser')]",
+        "difficulty": "[parameters('difficulty')]",
+        "levelname": "[parameters('level-name')]"
       },
       "properties": {
         "hardwareProfile": {
