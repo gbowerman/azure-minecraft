@@ -249,7 +249,9 @@
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
       ],
-      "tags": {},
+      "tags": {
+        "minecraftuser": "[parameters('minecraftUser')]"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('virtualMachineSize')]"
