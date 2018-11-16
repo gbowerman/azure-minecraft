@@ -249,6 +249,17 @@
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
       ],
+      "tags": {
+        "minecraftUser": "[parameters('minecraftUser')]",
+        "difficulty": "[parameters('difficulty')]",
+        "level-name": "[parameters('level-name')]",
+        "gamemode": "[parameters('gamemode')]",
+        "white-list": "[parameters('white-list')]",
+        "enable-command-block": "[parameters('enable-command-block')]",
+        "spawn-monsters": "[parameters('spawn-monsters')]",
+        "generate-structures": "[parameters('generate-structures)]",
+        "level-seed": "[parameters('level-seed')]"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('virtualMachineSize')]"
@@ -268,7 +279,7 @@
           "osDisk": {
             "caching": "ReadWrite",
             "createOption": "FromImage",
-            "diskSizeGB": "100"
+            "diskSizeGB": 100
           }
         },
         "networkProfile": {
@@ -277,27 +288,6 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
             }
           ]
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmName'),'/newuserscript')]",
-      "apiVersion": "[variables('computeApiVersion')]",
-      "location": "[variables('location')]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-		"type": "CustomScript",
-		"typeHandlerVersion": "2.0",
-		"autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[concat(parameters('baseUrl'),'/install_minecraft.sh')]"
-          ],
-          "commandToExecute": "[concat('bash install_minecraft.sh ', parameters('minecraftUser'), ' ', parameters('difficulty'), ' ', parameters('level-name'), ' ', parameters('gamemode'), ' ', parameters('white-list'), ' ', parameters('enable-command-block'), ' ', parameters('spawn-monsters'), ' ', parameters('generate-structures'), ' ', parameters('level-seed'))]"
         }
       }
     }
