@@ -252,7 +252,13 @@
       "tags": {
         "minecraftuser": "[parameters('minecraftUser')]",
         "difficulty": "[parameters('difficulty')]",
-        "levelname": "[parameters('level-name')]"
+        "levelname": "[parameters('level-name')]",
+        "gamemode": "[parameters('gamemode')]",
+        "whitelist": "[parameters('white-list')]",
+        "enablecommandblock": "[parameters('enable-command-block')]",
+        "spawnmonsters": "[parameters('spawn-monsters')]",
+        "generatestructures": "[parameters('generate-structures)]",
+        "levelseed": "[parameters('level-seed')]"
       },
       "properties": {
         "hardwareProfile": {
