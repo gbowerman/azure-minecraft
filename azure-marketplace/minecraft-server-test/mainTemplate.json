@@ -257,7 +257,7 @@
         "whitelist": "[parameters('white-list')]",
         "enablecommandblock": "[parameters('enable-command-block')]",
         "spawnmonsters": "[parameters('spawn-monsters')]",
-        "generatestructures": "[parameters('generate-structures)]",
+        "generatestructures": "[parameters('generate-structures')]",
         "levelseed": "[parameters('level-seed')]"
       },
       "properties": {
