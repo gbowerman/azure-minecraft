@@ -1,5 +1,5 @@
 #!/bin/bash
-# Custom Minecraft server install script for Ubuntu 15.04
+# Custom Minecraft server install script for Ubuntu 18.04
 # $1 = Minecraft user name
 # $2 = difficulty
 # $3 = level-name
