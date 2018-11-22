@@ -5,11 +5,8 @@
 minecraft_server_path=/srv/minecraft_server
 minecraft_user=minecraft
 minecraft_group=minecraft
-UUID_URL=https://api.mojang.com/users/profiles/minecraft/$1
 PY_URL=https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-test/mcsetup.py
 
-# screen scrape the server jar location from the Minecraft server download page
-SERVER_JAR_URL=`curl https://minecraft.net/en-us/download/server/ | grep 'Download <a' | cut -d '"' -f2`
 server_jar=server.jar
 
 # update repos
@@ -30,12 +27,6 @@ adduser --system --no-create-home --home $minecraft_server_path $minecraft_user
 addgroup --system $minecraft_group
 
 cd $minecraft_server_path
-
-# download the server jar
-while ! echo y | wget $SERVER_JAR_URL; do
-    sleep 10
-    wget $SERVER_JAR_URL
-done
 
 # set permissions on install folder
 chown -R $minecraft_user $minecraft_server_path

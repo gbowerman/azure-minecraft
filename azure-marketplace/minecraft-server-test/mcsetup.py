@@ -9,17 +9,14 @@ import json
 import requests
 
 def main():
-    '''
-    # debug - switch this code back in when deploying on Azure VM
     # VM tags from instance metadata endpoint
     endpoint = "http://169.254.169.254/metadata/instance/compute?api-version=2017-08-01"
     headers={'Metadata': 'True'}
     data_dict = requests.get(endpoint, headers=headers).json()
     tag_string = data_dict['tags']
-    '''
-    tag_string = 'difficulty:1;enablecommandblock:true;gamemode:0;generatestructures:true;levelname:world;levelseed:olives;minecraftuser:bugthing;spawnmonsters:true;whitelist:true'
-    
+
     MOJANG_URL = 'https://api.mojang.com/users/profiles/minecraft/'
+    SERVER_URL = 'https://minecraft.net/en-us/download/server/'
     MCFOLDER = '/srv/minecraft_server/'
 
     # get custom settings from tag_string list
@@ -30,6 +27,22 @@ def main():
         val_list = value.split(':')
         tag_dict[val_list[0]] = val_list[1]
 
+    # get the server download landing page
+    download_page = requests.get(SERVER_URL).text
+
+    # extract the server jar URL
+    dl_idx = download_page.find('Download <a href="')
+    url_substr = download_page[dl_idx+18:]
+    dl_end = url_substr.find('"')
+    dl_url = url_substr[:dl_end]
+
+    # download the server and write it to file
+    jar_filename = MCFOLDER + 'server.jar'
+    with open(jar_filename, "wb") as jarfile:
+        mc_jar = requests.get(dl_url)
+        jarfile.write(mc_jar.content)
+        jarfile.close()
+    
     # convert Minecraft username to GUID using the Mojang API
     api_url = MOJANG_URL + tag_dict['minecraftuser']
     guid_dict = requests.get(api_url).json()

@@ -1,0 +1,36 @@
+#cloud-config
+
+runcmd:
+
+SERVER_JAR_URL=`curl https://minecraft.net/en-us/download/server/ | grep 'Download <a' | cut -d '"' -f2`
+server_jar=server.jar
+
+- r=60 && for i in $(seq 1 $r); do apt-get update && break || [ $i == $r ] && break 0 || sleep 5; done
+- r=60 && for i in $(seq 1 $r); do apt install -y default-jre && break || [ $i == $r ] && break 0 || sleep 5; done
+- mkdir /srv/minecraft_server
+- adduser --system --no-create-home --home /srv/minecraft_server minecraft
+- addgroup --system minecraft
+
+cd /srv/minecraft_server
+
+# download the server jar
+while ! echo y | wget $SERVER_JAR_URL; do
+    sleep 10
+    wget $SERVER_JAR_URL
+done
+
+- chown -R minecraft /srv/minecraft_server
+- touch /srv/minecraft_server/eula.txt
+- echo 'eula=true' >> /srv/minecraft_server/eula.txt
+- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-test/mcsetup.py > /srv/minecraft_server/mcsetup.py
+- chmod +x /srv/minecraft_server/mcsetup.py
+- /srv/minecraft_server/mcsetup.py
+- touch /etc/systemd/system/minecraft-server.service
+- printf '[Unit]\nDescription=Minecraft Service\nAfter=rc-local.service\n' >> /etc/systemd/system/minecraft-server.service
+- printf '[Service]\nWorkingDirectory=%s\n' /srv/minecraft_server >> /etc/systemd/system/minecraft-server.service
+- printf 'ExecStart=/usr/bin/java -Xms%s -Xmx%s -jar %s/%s nogui\n' 1g 2g /srv/minecraft_server $server_jar >> /etc/systemd/system/minecraft-server.service
+- printf 'ExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\nRestart=on-failure\n' >> /etc/systemd/system/minecraft-server.service
+- printf '[Install]\nWantedBy=multi-user.target\nAlias=minecraft.service' >> /etc/systemd/system/minecraft-server.service
+- chmod +x /etc/systemd/system/minecraft-server.service
+- systemctl start minecraft-server
+- systemctl enable minecraft-server
