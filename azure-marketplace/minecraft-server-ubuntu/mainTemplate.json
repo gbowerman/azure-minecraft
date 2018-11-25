@@ -3,9 +3,9 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": {
-        "type": "string",
-        "defaultValue": ""
-      },
+      "type": "string",
+      "defaultValue": ""
+    },
     "baseUrl": {
       "type": "string",
       "metadata": {
@@ -249,12 +249,24 @@
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
       ],
+      "tags": {
+        "minecraftuser": "[parameters('minecraftUser')]",
+        "difficulty": "[parameters('difficulty')]",
+        "levelname": "[parameters('level-name')]",
+        "gamemode": "[parameters('gamemode')]",
+        "whitelist": "[parameters('white-list')]",
+        "enablecommandblock": "[parameters('enable-command-block')]",
+        "spawnmonsters": "[parameters('spawn-monsters')]",
+        "generatestructures": "[parameters('generate-structures')]",
+        "levelseed": "[parameters('level-seed')]"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('virtualMachineSize')]"
         },
         "osProfile": {
           "computerName": "[variables('vmName')]",
+          "customData": "[base64(concat('#cloud-config\n\nruncmd:\n- r=60 && for i in $(seq 1 $r); do apt-get update && break || [ $i == $r ] && break 0 || sleep 5; done\n- r=60 && for i in $(seq 1 $r); do apt install -y default-jre && break || [ $i == $r ] && break 0 || sleep 5; done\n- mkdir /srv/minecraft_server\n- adduser --system --no-create-home --home /srv/minecraft_server minecraft\n- addgroup --system minecraft\n- chown -R minecraft /srv/minecraft_server\n- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-ubuntu/mcsetup.py > /srv/minecraft_server/mcsetup.py\n- chmod +x /srv/minecraft_server/mcsetup.py\n- /srv/minecraft_server/mcsetup.py\n- systemctl start minecraft-server\n- systemctl enable minecraft-server'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -277,27 +289,6 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
             }
           ]
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmName'),'/newuserscript')]",
-      "apiVersion": "[variables('computeApiVersion')]",
-      "location": "[variables('location')]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-		"type": "CustomScript",
-		"typeHandlerVersion": "2.0",
-		"autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[concat(parameters('baseUrl'),'/install_minecraft.sh')]"
-          ],
-          "commandToExecute": "[concat('bash install_minecraft.sh ', parameters('minecraftUser'), ' ', parameters('difficulty'), ' ', parameters('level-name'), ' ', parameters('gamemode'), ' ', parameters('white-list'), ' ', parameters('enable-command-block'), ' ', parameters('spawn-monsters'), ' ', parameters('generate-structures'), ' ', parameters('level-seed'))]"
         }
       }
     }
