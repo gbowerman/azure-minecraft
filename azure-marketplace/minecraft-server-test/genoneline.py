@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 '''goal "commandToExecute": "[variables('jumpboxWindowsCustomScript')]"'''
 import os
 import re
