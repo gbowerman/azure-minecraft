@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-'''goal "commandToExecute": "[variables('jumpboxWindowsCustomScript')]"'''
+'''genonline.py - Python 3 version of AnHowe's script to package a cloud-init.txt script into an
+   Azure Resource Manage template format. 
+   goal: "commandToExecute": "[variables('jumpboxWindowsCustomScript')]
+"'''
 import os
 import re
 import sys
