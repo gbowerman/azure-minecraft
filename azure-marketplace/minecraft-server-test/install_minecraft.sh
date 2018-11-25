@@ -3,11 +3,7 @@
 
 # basic service and API settings
 minecraft_server_path=/srv/minecraft_server
-minecraft_user=minecraft
-minecraft_group=minecraft
 PY_URL=https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-test/mcsetup.py
-
-server_jar=server.jar
 
 # update repos
 while ! echo y | apt-get update; do
@@ -23,41 +19,18 @@ done
 
 # create user and install folder
 mkdir $minecraft_server_path
-adduser --system --no-create-home --home $minecraft_server_path $minecraft_user
-addgroup --system $minecraft_group
+adduser --system --no-create-home --home $minecraft_server_path minecraft
+addgroup --system minecraft
 
 cd $minecraft_server_path
 
 # set permissions on install folder
 chown -R $minecraft_user $minecraft_server_path
 
-# adjust memory usage depending on VM size
-totalMem=$(free -m | awk '/Mem:/ { print $2 }')
-if [ $totalMem -lt 2048 ]; then
-    memoryAllocs=512m
-    memoryAllocx=1g
-else
-    memoryAllocs=1g
-    memoryAllocx=2g
-fi
-
-# create the uela file
-touch $minecraft_server_path/eula.txt
-echo 'eula=true' >> $minecraft_server_path/eula.txt
-
-# set up ops and server.properties file
+# set up ops & server.properties file, create service
 curl $PY_URL > $minecraft_server_path/mcsetup.py
 chmod +x $minecraft_server_path/mcsetup.py
 $minecraft_server_path/mcsetup.py
-
-# create a service
-touch /etc/systemd/system/minecraft-server.service
-printf '[Unit]\nDescription=Minecraft Service\nAfter=rc-local.service\n' >> /etc/systemd/system/minecraft-server.service
-printf '[Service]\nWorkingDirectory=%s\n' $minecraft_server_path >> /etc/systemd/system/minecraft-server.service
-printf 'ExecStart=/usr/bin/java -Xms%s -Xmx%s -jar %s/%s nogui\n' $memoryAllocs $memoryAllocx $minecraft_server_path $server_jar >> /etc/systemd/system/minecraft-server.service
-printf 'ExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\nRestart=on-failure\n' >> /etc/systemd/system/minecraft-server.service
-printf '[Install]\nWantedBy=multi-user.target\nAlias=minecraft.service' >> /etc/systemd/system/minecraft-server.service
-chmod +x /etc/systemd/system/minecraft-server.service
 
 systemctl start minecraft-server
 systemctl enable minecraft-server

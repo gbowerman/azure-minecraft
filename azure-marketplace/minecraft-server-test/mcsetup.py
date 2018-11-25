@@ -6,18 +6,28 @@
       - designed to be called from the shell script that sets up the service
 '''
 import json
+import os
 import requests
 
-def main():
-    # VM tags from instance metadata endpoint
-    endpoint = "http://169.254.169.254/metadata/instance/compute?api-version=2017-08-01"
-    headers={'Metadata': 'True'}
-    data_dict = requests.get(endpoint, headers=headers).json()
-    tag_string = data_dict['tags']
+def write_file(filepath, filetext):
+    '''Create a file, write to it, close it'''
+    newfile = open(filepath,'w')
+    newfile.write(filetext)
+    newfile.close()
 
+
+def main():
+    # constants
+    IMS_ENDPOINT = "http://169.254.169.254/metadata/instance/compute?api-version=2017-08-01"
     MOJANG_URL = 'https://api.mojang.com/users/profiles/minecraft/'
     SERVER_URL = 'https://minecraft.net/en-us/download/server/'
     MCFOLDER = '/srv/minecraft_server/'
+    SERVICE_PATH = '/etc/systemd/system/minecraft-server.service'
+
+    # Extract VM tags from instance metadata endpoint
+    headers={'Metadata': 'True'}
+    data_dict = requests.get(IMS_ENDPOINT, headers=headers).json()
+    tag_string = data_dict['tags']
 
     # get custom settings from tag_string list
     # convert string from 'valname1:val1;valname2:val2' format to dictionary
@@ -36,7 +46,7 @@ def main():
     dl_end = url_substr.find('"')
     dl_url = url_substr[:dl_end]
 
-    # download the server and write it to file
+    # download the server, write it to file
     jar_filename = MCFOLDER + 'server.jar'
     with open(jar_filename, "wb") as jarfile:
         mc_jar = requests.get(dl_url)
@@ -52,10 +62,7 @@ def main():
 
     # print ops.json file
     ops_str = '[\n {\n  "uuid":"' + uuid_str + '",\n  \"name\":"' + tag_dict['minecraftuser'] + '",\n  "level":4\n }\n]'
-    opsfile_str = MCFOLDER + 'ops.json'
-    opsfile = open(opsfile_str,'w')
-    opsfile.write(ops_str)
-    opsfile.close()
+    write_file(MCFOLDER + 'ops.json', ops_str)
 
     # print server.properties file
     srv_str = '\n'.join(["difficulty=" + tag_dict['difficulty'],
@@ -66,11 +73,26 @@ def main():
                         "spawn-monsters=" + tag_dict['spawnmonsters'],
                         "generate-structures=" + tag_dict['generatestructures'],
                         "level-seed=" + tag_dict['levelseed'] + "\n"])
-    srvfile_str = MCFOLDER + 'server.properties'
-    srvfile = open(srvfile_str,'w')
-    srvfile.write(srv_str)
-    srvfile.close()
+    write_file(MCFOLDER + 'server.properties', srv_str)
+    
+    # create a service and set the permissions
+    service_str = '\n'.join(['[Unit]',
+                            'Description=Minecraft Service',
+                            'After=rc-local.service', 
+                            '[Service]',
+                            'WorkingDirectory=' + MCFOLDER,
+                            'ExecStart=/usr/bin/java -Xms1g -Xmx2g -jar ' + jar_filename,
+                            'ExecReload=/bin/kill -HUP $MAINPID',
+                            'KillMode=process',
+                            'Restart=on-failure',
+                            '[Install]',
+                            'WantedBy=multi-user.target',
+                            'Alias=minecraft.service'])
+    write_file(SERVICE_PATH, service_str)
+    os.chmod(SERVICE_PATH, 0o664)
 
+    # create the uela file
+    write_file(MCFOLDER + 'eula.txt', 'eula=true')
 
 if __name__ == "__main__":
     main()
