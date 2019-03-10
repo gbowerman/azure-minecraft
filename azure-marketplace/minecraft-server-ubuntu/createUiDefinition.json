@@ -1,0 +1,277 @@
+{
+    "handler": "Microsoft.Compute.MultiVm",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "basics": [
+            {
+                "name": "adminUserName",
+                "type": "Microsoft.Compute.UserNameTextBox",
+                "label": "VM username",
+                "toolTip": "Choose a username to be used to SSH to the Minecraft server virtual machine.",
+                "defaultValue": "mcuser",
+                "constraints": {
+                    "required": true
+                },
+                "osPlatform": "Linux"
+            },
+            {
+                "name": "adminPassword",
+                "type": "Microsoft.Common.PasswordBox",
+                "label": {
+                    "password": "Password",
+                    "confirmPassword": "Confirm password"
+                },
+                "toolTip": "Admin password for the virtual machine.",
+                "constraints": {
+                    "required": true,
+                    "regex": "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\\d\\W])|(?=.*\\W)(?=.*\\d))|(?=.*\\W)(?=.*[A-Z])(?=.*\\d)).{12,72}$",
+                    "validationMessage": "Invalid Password"
+                },
+                "options": {
+                    "hideConfirmation": false
+                },
+                "visible": true
+            }
+        ],
+        "steps": [
+            {
+                "name": "virtualMachineSettings",
+                "label": "Virtual Machine Settings",
+                "bladeTitle": "Virtual Machine Settings",
+                "subLabel": {
+                    "preValidation": "Configure virtual machine settings for the minecraft node",
+                    "postValidation": "Done"
+                },
+                "elements": [
+                    {
+                        "name": "dnsNameForPublicIP",
+                        "type": "Microsoft.Network.PublicIpAddressCombo",
+                        "label": {
+                            "publicIpAddress": "Public IP address resource name",
+                            "domainNameLabel": "Domain name label"
+                        },
+                        "toolTip": {
+                            "publicIpAddress": "The name of the IP resource",
+                            "domainNameLabel": "The subdomain name of the Public IP Address"
+                        },
+                        "defaultValue": {
+                            "publicIpAddressName": "minecraft-public-ip",
+                            "domainNameLabel": ""
+                        },
+                        "constraints": {
+                            "required": {
+                                "domainNameLabel": true
+                            }
+                        },
+                        "options": {
+                            "hideNone": true,
+                            "hideDomainNameLabel": false,
+                            "hideExisting": true
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "virtualMachineSize",
+                        "type": "Microsoft.Compute.SizeSelector",
+                        "label": "Size",
+                        "toolTip": "",
+                        "recommendedSizes": [
+                            "Standard_D1_V2",
+                            "Standard_D2_V2",
+                            "Standard_D3_V2"
+                        ],
+                        "osPlatform": "Linux",
+                        "visible": true
+                    }
+                ]
+            },
+            {
+                "name": "minecraftServerSettings",
+                "label": "Minecraft Server Settings",
+                "bladeTitle": "Minecraft Server Settings",
+                "subLabel": {
+                    "preValidation": "Configure minecraft server settings",
+                    "postValidation": "Done"
+                },
+                "elements": [
+                    {
+                        "name": "minecraftUser",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Minecraft username",
+                        "defaultValue": "",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[A-Za-z0-9_]{3,16}$",
+                            "validationMessage": "Only letters, numbers and underscore allowed, and the value must be 3-16 characters long."
+                        }
+                    },
+                    {
+                        "name": "difficulty",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "difficulty",
+                        "defaultValue": "1",
+                        "toolTip": "0 - Peaceful, 1 - Easy, 2 - Normal, 3 - Hard",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "0",
+                                    "value": "0"
+                                },
+                                {
+                                    "label": "1",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "2",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "3",
+                                    "value": "3"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "level-name",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "level-name",
+                        "defaultValue": "world",
+                        "visible": true
+                    },
+                    {
+                        "name": "gamemode",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "gamemode",
+                        "defaultValue": "0",
+                        "toolTip": "0 - Peaceful, 1 - Easy, 2 - Normal, 3 - Hard",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "0",
+                                    "value": "0"
+                                },
+                                {
+                                    "label": "1",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "2",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "3",
+                                    "value": "3"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "white-list",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "white-list",
+                        "defaultValue": "false",
+                        "toolTip": "If true, only operators and whitelisted players can connect",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "false",
+                                    "value": "false"
+                                },
+                                {
+                                    "label": "true",
+                                    "value": "true"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "enable-command-block",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "enable-command-block",
+                        "defaultValue": "false",
+                        "toolTip": "If true, command blocks can be used",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "false",
+                                    "value": "false"
+                                },
+                                {
+                                    "label": "true",
+                                    "value": "true"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "spawn-monsters",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "spawn-monsters",
+                        "defaultValue": "true",
+                        "toolTip": "If true, enables monster spawningd",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "false",
+                                    "value": "false"
+                                },
+                                {
+                                    "label": "true",
+                                    "value": "true"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "generate-structures",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "generate-structures",
+                        "defaultValue": "true",
+                        "toolTip": "If true, generates villages etc.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "false",
+                                    "value": "false"
+                                },
+                                {
+                                    "label": "true",
+                                    "value": "true"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "level-seed",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "level-seed",
+                        "visible": true
+                    }
+                ]
+            }
+        ],
+        "outputs": {
+            "location": "[location()]",
+            "adminUserName": "[basics('adminUserName')]",
+            "adminPassword": "[basics('adminPassword')]",
+            "dnsNameForPublicIP": "[steps('virtualMachineSettings').dnsNameForPublicIP.domainNameLabel]",
+            "virtualMachineSize": "[steps('virtualMachineSettings').virtualMachineSize]",
+            "minecraftUser": "[steps('minecraftServerSettings').minecraftUser]",
+            "difficulty": "[steps('minecraftServerSettings').difficulty]",
+            "level-name": "[steps('minecraftServerSettings').level-name]",
+            "gamemode": "[steps('minecraftServerSettings').gamemode]",
+            "white-list": "[steps('minecraftServerSettings').white-list]",
+            "enable-command-block": "[steps('minecraftServerSettings').enable-command-block]",
+            "spawn-monsters": "[steps('minecraftServerSettings').spawn-monsters]",
+            "generate-structures": "[steps('minecraftServerSettings').generate-structures]",
+            "level-seed": "[steps('minecraftServerSettings').level-seed]"
+        }
+    }
+}

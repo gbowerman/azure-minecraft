@@ -1,0 +1,296 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "baseUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "The base URL for dependent assets",
+        "artifactsBaseUrl": ""
+      },
+      "defaultValue": "https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-debian"
+    },
+    "minecraftUser": {
+      "type": "string",
+      "metadata": {
+        "description": "Your Minecraft user name"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Admin user name you will use to log on to the virtual machine."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password for the admin user name."
+      }
+    },
+    "dnsNameForPublicIP": {
+      "type": "string",
+      "metadata": {
+        "description": "Put a unique DNS Name for the Public IP used to access the virtual machine."
+      }
+    },
+    "virtualMachineSize": {
+      "type": "string",
+      "defaultValue": "Standard_A1",
+      "metadata": {
+        "description": "This is the Azure virtual machine size, and will affect the cost. If you don't know, just leave the default value."
+      }
+    },
+    "difficulty": {
+      "type": "string",
+      "defaultValue": "1",
+      "metadata": {
+        "description": "0 - Peaceful, 1 - Easy, 2 - Normal, 3 - Hard"
+      }
+    },
+    "level-name": {
+      "type": "string",
+      "defaultValue": "world",
+      "metadata": {
+        "description": "Name of your world"
+      }
+    },
+    "gamemode": {
+      "type": "string",
+      "defaultValue": "0",
+      "metadata": {
+        "description": "0 - Survival, 1 - Creative, 2 - Adventure, 3 - Spectator"
+      }
+    },
+    "white-list": {
+      "type": "string",
+      "defaultValue": "false",
+      "metadata": {
+        "description": "Only ops and whitelisted players can connect"
+      }
+    },
+    "enable-command-block": {
+      "type": "string",
+      "defaultValue": "false",
+      "metadata": {
+        "description": "enable command blocks"
+      }
+    },
+    "spawn-monsters": {
+      "type": "string",
+      "defaultValue": "true",
+      "metadata": {
+        "description": "Enables monster spawning"
+      }
+    },
+    "generate-structures": {
+      "type": "string",
+      "defaultValue": "true",
+      "metadata": {
+        "description": "Generates villages etc."
+      }
+    },
+    "level-seed": {
+      "type": "string",
+      "defaultValue": " ",
+      "metadata": {
+        "description": "Add a seed for your world"
+      }
+    }
+  },
+  "variables": {
+    "location": "[parameters('location')]",
+    "lowerCaseDNSName": "[toLower(parameters('dnsNameForPublicIP'))]",
+    "imagePublisher": "credativ",
+    "imageOffer": "Debian",
+    "OSDiskName": "osdiskforlinuxsimple",
+    "networkSecurityGroupName": "[concat(variables('lowerCaseDNSName'), 'nsg')]",
+    "nicName": "minecraftvmnic",
+    "addressPrefix": "10.0.0.0/16",
+    "subnetName": "subnet",
+    "subnetPrefix": "10.0.0.0/24",
+    "storageAccountType": "Standard_LRS",
+    "publicIPAddressName": "minecraftpublicip",
+    "publicIPAddressType": "Dynamic",
+    "oSVersion": "9",
+    "vmName": "minecraftvm",
+    "virtualNetworkName": "minecraftvnet",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
+    "computeApiVersion": "2018-10-01",
+    "networkApiVersion": "2018-08-01"
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-02-01",
+      "name": "pid-1ef24857-b32f-5370-abd1-1ac74cba9c3d",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": []
+        }
+      }
+    },
+    {
+      "apiVersion": "[variables('networkApiVersion')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('networkSecurityGroupName')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "ssh",
+            "properties": {
+              "description": "SSH port",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "minecraft",
+            "properties": {
+              "description": "Minecraft server port",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "25565",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "[variables('networkApiVersion')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('publicIPAddressName')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[variables('lowerCaseDNSName')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "[variables('networkApiVersion')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[variables('virtualNetworkName')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName'))]"
+      ],
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('addressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('subnetName')]",
+            "properties": {
+              "addressPrefix": "[variables('subnetPrefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "[variables('networkApiVersion')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('nicName')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
+              },
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "[variables('computeApiVersion')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[variables('vmName')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+      ],
+      "tags": {
+        "minecraftuser": "[parameters('minecraftUser')]",
+        "difficulty": "[parameters('difficulty')]",
+        "levelname": "[parameters('level-name')]",
+        "gamemode": "[parameters('gamemode')]",
+        "whitelist": "[parameters('white-list')]",
+        "enablecommandblock": "[parameters('enable-command-block')]",
+        "spawnmonsters": "[parameters('spawn-monsters')]",
+        "generatestructures": "[parameters('generate-structures')]",
+        "levelseed": "[parameters('level-seed')]"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('virtualMachineSize')]"
+        },
+        "osProfile": {
+          "computerName": "[variables('vmName')]",
+          "customData": "[base64(concat('#cloud-config\n\nruncmd:\n- r=60 && for i in $(seq 1 $r); do apt-get update && break || [ $i == $r ] && break 0 || sleep 5; done\n- r=60 && for i in $(seq 1 $r); do apt install -y default-jre && break || [ $i == $r ] && break 0 || sleep 5; done\n- mkdir /srv/minecraft_server\n- adduser --system --no-create-home --home /srv/minecraft_server minecraft\n- addgroup --system minecraft\n- chown -R minecraft /srv/minecraft_server\n- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-debian/mcsetup.py > /srv/minecraft_server/mcsetup.py\n- chmod +x /srv/minecraft_server/mcsetup.py\n- /srv/minecraft_server/mcsetup.py\n- systemctl start minecraft-server\n- systemctl enable minecraft-server'))]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('imagePublisher')]",
+            "offer": "[variables('imageOffer')]",
+            "sku": "[variables('oSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "diskSizeGB": "100"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

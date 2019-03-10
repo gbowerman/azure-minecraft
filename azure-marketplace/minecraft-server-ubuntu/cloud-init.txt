@@ -1,0 +1,14 @@
+#cloud-config
+
+runcmd:
+- r=60 && for i in $(seq 1 $r); do apt-get update && break || [ $i == $r ] && break 0 || sleep 5; done
+- r=60 && for i in $(seq 1 $r); do apt install -y default-jre && break || [ $i == $r ] && break 0 || sleep 5; done
+- mkdir /srv/minecraft_server
+- adduser --system --no-create-home --home /srv/minecraft_server minecraft
+- addgroup --system minecraft
+- chown -R minecraft /srv/minecraft_server
+- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-debian/mcsetup.py > /srv/minecraft_server/mcsetup.py
+- chmod +x /srv/minecraft_server/mcsetup.py
+- /srv/minecraft_server/mcsetup.py
+- systemctl start minecraft-server
+- systemctl enable minecraft-server
