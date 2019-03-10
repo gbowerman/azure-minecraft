@@ -12,7 +12,7 @@
         "description": "The base URL for dependent assets",
         "artifactsBaseUrl": ""
       },
-      "defaultValue": "https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-debian"
+      "defaultValue": "https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-ubuntu"
     },
     "minecraftUser": {
       "type": "string",
@@ -105,8 +105,8 @@
   "variables": {
     "location": "[parameters('location')]",
     "lowerCaseDNSName": "[toLower(parameters('dnsNameForPublicIP'))]",
-    "imagePublisher": "credativ",
-    "imageOffer": "Debian",
+    "imagePublisher": "Canonical",
+    "imageOffer": "UbuntuServer",
     "OSDiskName": "osdiskforlinuxsimple",
     "networkSecurityGroupName": "[concat(variables('lowerCaseDNSName'), 'nsg')]",
     "nicName": "minecraftvmnic",
@@ -116,7 +116,7 @@
     "storageAccountType": "Standard_LRS",
     "publicIPAddressName": "minecraftpublicip",
     "publicIPAddressType": "Dynamic",
-    "oSVersion": "9",
+    "oSVersion": "18.04-LTS",
     "vmName": "minecraftvm",
     "virtualNetworkName": "minecraftvnet",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
@@ -266,7 +266,7 @@
         },
         "osProfile": {
           "computerName": "[variables('vmName')]",
-          "customData": "[base64(concat('#cloud-config\n\nruncmd:\n- r=60 && for i in $(seq 1 $r); do apt-get update && break || [ $i == $r ] && break 0 || sleep 5; done\n- r=60 && for i in $(seq 1 $r); do apt install -y default-jre && break || [ $i == $r ] && break 0 || sleep 5; done\n- mkdir /srv/minecraft_server\n- adduser --system --no-create-home --home /srv/minecraft_server minecraft\n- addgroup --system minecraft\n- chown -R minecraft /srv/minecraft_server\n- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-debian/mcsetup.py > /srv/minecraft_server/mcsetup.py\n- chmod +x /srv/minecraft_server/mcsetup.py\n- /srv/minecraft_server/mcsetup.py\n- systemctl start minecraft-server\n- systemctl enable minecraft-server'))]",
+          "customData": "[base64(concat('#cloud-config\n\nruncmd:\n- r=60 && for i in $(seq 1 $r); do apt-get update && break || [ $i == $r ] && break 0 || sleep 5; done\n- r=60 && for i in $(seq 1 $r); do apt install -y default-jre && break || [ $i == $r ] && break 0 || sleep 5; done\n- mkdir /srv/minecraft_server\n- adduser --system --no-create-home --home /srv/minecraft_server minecraft\n- addgroup --system minecraft\n- chown -R minecraft /srv/minecraft_server\n- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-ubuntu/mcsetup.py > /srv/minecraft_server/mcsetup.py\n- chmod +x /srv/minecraft_server/mcsetup.py\n- /srv/minecraft_server/mcsetup.py\n- systemctl start minecraft-server\n- systemctl enable minecraft-server'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
