@@ -12,7 +12,7 @@
         "description": "The base URL for dependent assets",
         "artifactsBaseUrl": ""
       },
-      "defaultValue": "https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-ubuntu"
+      "defaultValue": "https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-debian"
     },
     "minecraftUser": {
       "type": "string",
@@ -23,7 +23,7 @@
     "adminUsername": {
       "type": "string",
       "metadata": {
-        "description": "Admin user name you will use to log on to the Virtual Machine."
+        "description": "Admin user name you will use to log on to the virtual machine."
       }
     },
     "adminPassword": {
@@ -35,14 +35,14 @@
     "dnsNameForPublicIP": {
       "type": "string",
       "metadata": {
-        "description": "Put a unique DNS Name for the Public IP used to access the Virtual Machine."
+        "description": "Put a unique DNS Name for the Public IP used to access the virtual machine."
       }
     },
     "virtualMachineSize": {
       "type": "string",
       "defaultValue": "Standard_A1",
       "metadata": {
-        "description": "This is the Azure Virtual Machine size, and will affect the cost. If you don't know, just leave the default value."
+        "description": "This is the Azure virtual machine size, and will affect the cost. If you don't know, just leave the default value."
       }
     },
     "difficulty": {
@@ -105,8 +105,8 @@
   "variables": {
     "location": "[parameters('location')]",
     "lowerCaseDNSName": "[toLower(parameters('dnsNameForPublicIP'))]",
-    "imagePublisher": "Canonical",
-    "imageOffer": "UbuntuServer",
+    "imagePublisher": "credativ",
+    "imageOffer": "Debian",
     "OSDiskName": "osdiskforlinuxsimple",
     "networkSecurityGroupName": "[concat(variables('lowerCaseDNSName'), 'nsg')]",
     "nicName": "minecraftvmnic",
@@ -116,7 +116,7 @@
     "storageAccountType": "Standard_LRS",
     "publicIPAddressName": "minecraftpublicip",
     "publicIPAddressType": "Dynamic",
-    "ubuntuOSVersion": "18.04-LTS",
+    "oSVersion": "9",
     "vmName": "minecraftvm",
     "virtualNetworkName": "minecraftvnet",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
@@ -266,7 +266,7 @@
         },
         "osProfile": {
           "computerName": "[variables('vmName')]",
-          "customData": "[base64(concat('#cloud-config\n\nruncmd:\n- r=60 && for i in $(seq 1 $r); do apt-get update && break || [ $i == $r ] && break 0 || sleep 5; done\n- r=60 && for i in $(seq 1 $r); do apt install -y default-jre && break || [ $i == $r ] && break 0 || sleep 5; done\n- mkdir /srv/minecraft_server\n- adduser --system --no-create-home --home /srv/minecraft_server minecraft\n- addgroup --system minecraft\n- chown -R minecraft /srv/minecraft_server\n- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-ubuntu/mcsetup.py > /srv/minecraft_server/mcsetup.py\n- chmod +x /srv/minecraft_server/mcsetup.py\n- /srv/minecraft_server/mcsetup.py\n- systemctl start minecraft-server\n- systemctl enable minecraft-server'))]",
+          "customData": "[base64(concat('#cloud-config\n\nruncmd:\n- r=60 && for i in $(seq 1 $r); do apt-get update && break || [ $i == $r ] && break 0 || sleep 5; done\n- r=60 && for i in $(seq 1 $r); do apt install -y default-jre && break || [ $i == $r ] && break 0 || sleep 5; done\n- mkdir /srv/minecraft_server\n- adduser --system --no-create-home --home /srv/minecraft_server minecraft\n- addgroup --system minecraft\n- chown -R minecraft /srv/minecraft_server\n- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-debian/mcsetup.py > /srv/minecraft_server/mcsetup.py\n- chmod +x /srv/minecraft_server/mcsetup.py\n- /srv/minecraft_server/mcsetup.py\n- systemctl start minecraft-server\n- systemctl enable minecraft-server'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -274,7 +274,7 @@
           "imageReference": {
             "publisher": "[variables('imagePublisher')]",
             "offer": "[variables('imageOffer')]",
-            "sku": "[variables('ubuntuOSVersion')]",
+            "sku": "[variables('oSVersion')]",
             "version": "latest"
           },
           "osDisk": {

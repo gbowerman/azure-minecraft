@@ -105,8 +105,8 @@
   "variables": {
     "location": "[parameters('location')]",
     "lowerCaseDNSName": "[toLower(parameters('dnsNameForPublicIP'))]",
-    "imagePublisher": "Canonical",
-    "imageOffer": "UbuntuServer",
+    "imagePublisher": "credativ",
+    "imageOffer": "Debian",
     "OSDiskName": "osdiskforlinuxsimple",
     "networkSecurityGroupName": "[concat(variables('lowerCaseDNSName'), 'nsg')]",
     "nicName": "minecraftvmnic",
@@ -116,7 +116,7 @@
     "storageAccountType": "Standard_LRS",
     "publicIPAddressName": "minecraftpublicip",
     "publicIPAddressType": "Dynamic",
-    "ubuntuOSVersion": "18.04-LTS",
+    "oSVersion": "9",
     "vmName": "minecraftvm",
     "virtualNetworkName": "minecraftvnet",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
@@ -274,7 +274,7 @@
           "imageReference": {
             "publisher": "[variables('imagePublisher')]",
             "offer": "[variables('imageOffer')]",
-            "sku": "[variables('ubuntuOSVersion')]",
+            "sku": "[variables('oSVersion')]",
             "version": "latest"
           },
           "osDisk": {
