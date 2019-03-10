@@ -41,7 +41,7 @@ def main():
     download_page = requests.get(SERVER_URL).text
 
     # extract the server jar URL
-    dl_idx = download_page.find('Download <a href="')
+    dl_idx = download_page.find('Download <a ')
     url_substr = download_page[dl_idx+18:]
     dl_end = url_substr.find('"')
     dl_url = url_substr[:dl_end]
