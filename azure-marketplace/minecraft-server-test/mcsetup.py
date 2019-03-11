@@ -81,7 +81,7 @@ level-seed={tag_dict['levelseed']}
     # 1st check physical memory is > 1GB else lower heap size..
     mem = virtual_memory()
     if mem.total <= 1024 * 1024 * 1024:
-        hearpargs = "-Xms512m -Xmx1g"
+        heapargs = "-Xms512m -Xmx1g"
     else:
         heapargs = "-Xms1g -Xmx2g"
 
