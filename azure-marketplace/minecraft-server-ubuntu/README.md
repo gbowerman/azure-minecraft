@@ -1,4 +1,4 @@
-# Install Minecraft server on a Debian virtual machine
+# Install Minecraft server on a Linux virtual machine
 
 
 This template deploys and sets up a customized Minecraft server on an Ubuntu virtual machine, with you as the operator. It also deploys a Virtual Network, Network Security Group, Public IP addresses and a Network Interface.
