@@ -7,6 +7,7 @@
 '''
 import os
 import requests
+from psutil import virtual_memory
 
 
 def write_file(filepath, filetext):
@@ -77,12 +78,20 @@ level-seed={tag_dict['levelseed']}
     write_file(f'{MCFOLDER}server.properties', srv_str)
 
     # create a service and set the permissions
+    # 1st check physical memory is > 1GB else lower heap size..
+    mem = virtual_memory()
+    if mem.total <= 1024 * 1024 * 1024:
+        hearpargs = "-Xms512m -Xmx1g"
+    else:
+        heapargs = "-Xms1g -Xmx2g"
+
+    # now create the service file
     service_str = f"""[Unit]
 Description=Minecraft Service
 After=rc-local.service
 [Service]
 WorkingDirectory={MCFOLDER}
-ExecStart=/usr/bin/java -Xms1g -Xmx2g -jar {jar_filename}
+ExecStart=/usr/bin/java {heapargs} -jar {jar_filename}
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=on-failure
