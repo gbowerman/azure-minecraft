@@ -7,7 +7,6 @@
 '''
 import os
 import requests
-from psutil import virtual_memory
 
 
 def write_file(filepath, filetext):
@@ -79,8 +78,8 @@ level-seed={tag_dict['levelseed']}
 
     # create a service and set the permissions
     # 1st check physical memory is > 1GB else lower heap size..
-    mem = virtual_memory()
-    if mem.total <= 1024 * 1024 * 1024:
+    vmsize_string = data_dict['vmSize']
+    if vmsize_string in ["Standard_B1s", "Standard_B1ls", "Standard_A1", "Basic_A1", "Standard_A0", "Basic_A0"]:
         heapargs = "-Xms512m -Xmx1g"
     else:
         heapargs = "-Xms1g -Xmx2g"
