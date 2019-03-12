@@ -80,7 +80,7 @@ level-seed={tag_dict['levelseed']}
     # 1st check physical memory is > 1GB else lower heap size..
     vmsize_string = data_dict['vmSize']
     if vmsize_string in ["Standard_B1s", "Standard_B1ls", "Standard_A1", "Basic_A1", "Standard_A0", "Basic_A0"]:
-        heapargs = "-Xms512m -Xmx1g"
+        heapargs = "-Xms512m -Xmx512m"
     else:
         heapargs = "-Xms1g -Xmx2g"
 

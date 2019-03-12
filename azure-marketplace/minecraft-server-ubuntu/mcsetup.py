@@ -77,12 +77,20 @@ level-seed={tag_dict['levelseed']}
     write_file(f'{MCFOLDER}server.properties', srv_str)
 
     # create a service and set the permissions
+    # 1st check physical memory is > 1GB else lower heap size..
+    vmsize_string = data_dict['vmSize']
+    if vmsize_string in ["Standard_B1s", "Standard_B1ls", "Standard_A1", "Basic_A1", "Standard_A0", "Basic_A0"]:
+        heapargs = "-Xms512m -Xmx512m"
+    else:
+        heapargs = "-Xms1g -Xmx2g"
+
+    # now create the service file
     service_str = f"""[Unit]
 Description=Minecraft Service
 After=rc-local.service
 [Service]
 WorkingDirectory={MCFOLDER}
-ExecStart=/usr/bin/java -Xms1g -Xmx2g -jar {jar_filename}
+ExecStart=/usr/bin/java {heapargs} -jar {jar_filename}
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=on-failure
