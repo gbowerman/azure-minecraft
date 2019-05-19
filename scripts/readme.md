@@ -17,12 +17,15 @@ Example:
 
 069a79f4-44e9-4726-a5be-fca90e38aaf5
 
-## mineserverupgrade.sh
+## mcupgrade.sh + mcdownload.py
 
-Upgrades an existing Azure Minecraft server to a newer version. Could also be used to downgrade.
+Upgrades an existing Azure Minecraft server to the latest version. Download both the .sh and .py script. 
+
+Requires Python 3.
 
 Example:
-sudo ./mineserverupgrade.sh 1.10
+cd /srv/minecraft_server
+sudo ./mcupgrade.sh
 
 
 

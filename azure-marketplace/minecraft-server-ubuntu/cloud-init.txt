@@ -12,3 +12,6 @@ runcmd:
 - /srv/minecraft_server/mcsetup.py
 - systemctl start minecraft-server
 - systemctl enable minecraft-server
+- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-ubuntu/mcdownload.py > /srv/minecraft_server/mcdownload.py
+- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-ubuntu/mcupgrade.sh > /srv/minecraft_server/mcupgrade.sh
+- chmod +x /srv/minecraft_server/mcdownload.py /srv/minecraft_server/mcupgrade.sh
