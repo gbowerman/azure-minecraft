@@ -6,14 +6,6 @@
       "type": "string",
       "defaultValue": ""
     },
-    "baseUrl": {
-      "type": "string",
-      "metadata": {
-        "description": "The base URL for dependent assets",
-        "artifactsBaseUrl": ""
-      },
-      "defaultValue": "https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-ubuntu"
-    },
     "minecraftUser": {
       "type": "string",
       "metadata": {
