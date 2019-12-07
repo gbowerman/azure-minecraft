@@ -2,6 +2,13 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+      },
+      "defaultValue": "[deployment().properties.templateLink.uri]"
+    },
     "location": {
       "type": "string",
       "defaultValue": ""
@@ -113,12 +120,15 @@
     "virtualNetworkName": "minecraftvnet",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
-    "computeApiVersion": "2018-10-01",
-    "networkApiVersion": "2018-08-01"
+    "mcDownloadUri": "[uri(parameters('_artifactsLocation'), 'mcdownload.py')]",
+    "mcSetupUri": "[uri(parameters('_artifactsLocation'), 'mcsetup.py')]",
+    "mcUpgradeUri": "[uri(parameters('_artifactsLocation'), 'mcupgrade.sh')]",
+    "computeApiVersion": "2019-03-01",
+    "networkApiVersion": "2019-09-01"
   },
   "resources": [
     {
-      "apiVersion": "2018-02-01",
+      "apiVersion": "2019-08-01",
       "name": "pid-1ef24857-b32f-5370-abd1-1ac74cba9c3d",
       "type": "Microsoft.Resources/deployments",
       "properties": {
@@ -258,7 +268,7 @@
         },
         "osProfile": {
           "computerName": "[variables('vmName')]",
-          "customData": "[base64(concat('#cloud-config\n\nruncmd:\n- r=60 && for i in $(seq 1 $r); do apt-get update && break || [ $i == $r ] && break 0 || sleep 5; done\n- r=60 && for i in $(seq 1 $r); do apt install -y default-jre && break || [ $i == $r ] && break 0 || sleep 5; done\n- mkdir /srv/minecraft_server\n- adduser --system --no-create-home --home /srv/minecraft_server minecraft\n- addgroup --system minecraft\n- chown -R minecraft /srv/minecraft_server\n- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-ubuntu/mcsetup.py > /srv/minecraft_server/mcsetup.py\n- chmod +x /srv/minecraft_server/mcsetup.py\n- /srv/minecraft_server/mcsetup.py\n- systemctl start minecraft-server\n- systemctl enable minecraft-server\n- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-ubuntu/mcdownload.py > /srv/minecraft_server/mcdownload.py\n- curl https://raw.githubusercontent.com/gbowerman/azure-minecraft/master/azure-marketplace/minecraft-server-ubuntu/mcupgrade.sh > /srv/minecraft_server/mcupgrade.sh\n- chmod +x /srv/minecraft_server/mcdownload.py /srv/minecraft_server/mcupgrade.sh'))]",          
+          "customData": "[base64(concat('#cloud-config\n\nruncmd:\n- r=60 && for i in $(seq 1 $r); do apt-get update && break || [ $i == $r ] && break 0 || sleep 5; done\n- r=60 && for i in $(seq 1 $r); do apt install -y default-jre && break || [ $i == $r ] && break 0 || sleep 5; done\n- mkdir /srv/minecraft_server\n- adduser --system --no-create-home --home /srv/minecraft_server minecraft\n- addgroup --system minecraft\n- chown -R minecraft /srv/minecraft_server\n- curl ', variables('mcSetupUri'), ' > /srv/minecraft_server/mcsetup.py\n- chmod +x /srv/minecraft_server/mcsetup.py\n- /srv/minecraft_server/mcsetup.py\n- systemctl start minecraft-server\n- systemctl enable minecraft-server\n- curl', variables('mcDownloadUri'), ' > /srv/minecraft_server/mcdownload.py\n- curl ', variables('mcUpgradeUri'), ' > /srv/minecraft_server/mcupgrade.sh\n- chmod +x /srv/minecraft_server/mcdownload.py /srv/minecraft_server/mcupgrade.sh'))]",          
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
