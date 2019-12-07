@@ -1,0 +1,29 @@
+{
+    "location": {
+        "value": "westus2"
+    },
+    "minecraftUser": {
+        "value": "<minecraft user name>"
+    },
+    "adminUsername": {
+        "value": "mcuser"
+    },
+    "adminPassword": {
+        "value": "<put a temp password here>"
+    },
+    "dnsNameForPublicIP": {
+        "value": "<machine name if not generated>"
+    },
+    "virtualMachineSize": {
+        "value": "Standard_B2s"
+    },
+    "white-list": {
+        "value": "true"
+    },
+    "enable-command-block": {
+        "value": "true"
+    },
+    "level-seed": {
+        "value": "olives"
+    }
+}
