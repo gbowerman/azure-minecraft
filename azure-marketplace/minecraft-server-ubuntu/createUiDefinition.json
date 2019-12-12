@@ -74,12 +74,8 @@
                         "name": "virtualMachineSize",
                         "type": "Microsoft.Compute.SizeSelector",
                         "label": "Size",
-                        "toolTip": "",
-                        "recommendedSizes": [
-                            "Standard_D1_V2",
-                            "Standard_D2_V2",
-                            "Standard_D3_V2"
-                        ],
+                        "toolTip": "Pick a VM size. More than 2GB RAM is recommended.",
+                        "defaultValue": "Standard_B2s",
                         "osPlatform": "Linux",
                         "visible": true
                     }
