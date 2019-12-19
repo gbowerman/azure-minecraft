@@ -18,28 +18,28 @@
                 "name": "adminCredentials",
                 "type": "Microsoft.Compute.CredentialsCombo",
                 "label": {
-                  "authenticationType": "Authentication type",
-                  "password": "Password",
-                  "confirmPassword": "Confirm password",
-                  "sshPublicKey": "SSH public key"
+                    "authenticationType": "Authentication type",
+                    "password": "Password",
+                    "confirmPassword": "Confirm password",
+                    "sshPublicKey": "SSH public key"
                 },
                 "toolTip": {
-                  "authenticationType": "",
-                  "password": "",
-                  "sshPublicKey": ""
+                    "authenticationType": "",
+                    "password": "",
+                    "sshPublicKey": ""
                 },
                 "constraints": {
-                  "required": true,
-                  "customPasswordRegex": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@#\\$%\\^&\\*-_!+=\\[\\]\\{\\}\\|\\\\:',\\.\\?\\/`~\"\\(\\);]{12,}$",
-                  "customValidationMessage": "The password must contain at least 12 characters, with at least 1 letter and 1 number. Alphanumerical (@#$%^&*-_!+=[]{}|\\:',.?/`~\"();)and special characters are allowed"
+                    "required": true,
+                    "customPasswordRegex": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@#\\$%\\^&\\*-_!+=\\[\\]\\{\\}\\|\\\\:',\\.\\?\\/`~\"\\(\\);]{12,}$",
+                    "customValidationMessage": "The password must contain at least 12 characters, with at least 1 letter and 1 number. Alphanumerical (@#$%^&*-_!+=[]{}|\\:',.?/`~\"();)and special characters are allowed"
                 },
                 "options": {
-                  "hideConfirmation": false,
-                  "hidePassword": false
+                    "hideConfirmation": false,
+                    "hidePassword": false
                 },
                 "osPlatform": "Linux",
                 "visible": true
-              }
+            }
         ],
         "steps": [
             {
