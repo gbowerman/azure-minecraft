@@ -84,7 +84,9 @@
                         "label": "Size",
                         "toolTip": "Pick a VM size. More than 2GB RAM is recommended.",
                         "recommendedSizes": [
-                        "Standard_B2s"
+                        "Standard_B2s",
+                        "Standard_B2ms",
+                        "Standard_A2_v2"
                         ],
                         "osPlatform": "Linux",
                         "visible": true
