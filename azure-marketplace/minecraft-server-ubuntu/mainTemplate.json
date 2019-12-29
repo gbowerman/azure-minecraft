@@ -56,7 +56,7 @@
       "type": "string",
       "defaultValue": "Standard_B2s",
       "metadata": {
-        "description": "This is the Azure virtual machine size, and will affect the cost. If you don't know, just leave the default value."
+        "description": "Azure virtual machine size, which affects cost, more than 2GB memory is recommened."
       }
     },
     "difficulty": {

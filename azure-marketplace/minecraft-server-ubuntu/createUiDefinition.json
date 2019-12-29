@@ -83,7 +83,9 @@
                         "type": "Microsoft.Compute.SizeSelector",
                         "label": "Size",
                         "toolTip": "Pick a VM size. More than 2GB RAM is recommended.",
-                        "defaultValue": "Standard_B2s",
+                        "recommendedSizes": [
+                        "Standard_B2s"
+                        ],
                         "osPlatform": "Linux",
                         "visible": true
                     }
