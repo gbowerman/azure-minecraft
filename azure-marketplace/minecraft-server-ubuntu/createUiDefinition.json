@@ -15,21 +15,29 @@
                 "osPlatform": "Linux"
             },
             {
-                "name": "adminPassword",
-                "type": "Microsoft.Common.PasswordBox",
+                "name": "adminCredentials",
+                "type": "Microsoft.Compute.CredentialsCombo",
                 "label": {
+                    "authenticationType": "Authentication type",
                     "password": "Password",
-                    "confirmPassword": "Confirm password"
+                    "confirmPassword": "Confirm password",
+                    "sshPublicKey": "SSH public key"
                 },
-                "toolTip": "Admin password for the virtual machine.",
+                "toolTip": {
+                    "authenticationType": "",
+                    "password": "",
+                    "sshPublicKey": ""
+                },
                 "constraints": {
                     "required": true,
-                    "regex": "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\\d\\W])|(?=.*\\W)(?=.*\\d))|(?=.*\\W)(?=.*[A-Z])(?=.*\\d)).{12,72}$",
-                    "validationMessage": "Invalid Password"
+                    "customPasswordRegex": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@#\\$%\\^&\\*-_!+=\\[\\]\\{\\}\\|\\\\:',\\.\\?\\/`~\"\\(\\);]{12,}$",
+                    "customValidationMessage": "The password must contain at least 12 characters, with at least 1 letter and 1 number. Alphanumerical (@#$%^&*-_!+=[]{}|\\:',.?/`~\"();)and special characters are allowed"
                 },
                 "options": {
-                    "hideConfirmation": false
+                    "hideConfirmation": false,
+                    "hidePassword": true
                 },
+                "osPlatform": "Linux",
                 "visible": true
             }
         ],
@@ -74,11 +82,11 @@
                         "name": "virtualMachineSize",
                         "type": "Microsoft.Compute.SizeSelector",
                         "label": "Size",
-                        "toolTip": "",
+                        "toolTip": "Pick a VM size. More than 2GB RAM is recommended.",
                         "recommendedSizes": [
-                            "Standard_D1_V2",
-                            "Standard_D2_V2",
-                            "Standard_D3_V2"
+                        "Standard_B2s",
+                        "Standard_B2ms",
+                        "Standard_A2_v2"
                         ],
                         "osPlatform": "Linux",
                         "visible": true
@@ -260,7 +268,9 @@
         "outputs": {
             "location": "[location()]",
             "adminUserName": "[basics('adminUserName')]",
-            "adminPassword": "[basics('adminPassword')]",
+            "authenticationType": "[basics('adminCredentials').authenticationType]",
+            "adminPassword": "[basics('adminCredentials').password]",
+            "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
             "dnsNameForPublicIP": "[steps('virtualMachineSettings').dnsNameForPublicIP.domainNameLabel]",
             "virtualMachineSize": "[steps('virtualMachineSettings').virtualMachineSize]",
             "minecraftUser": "[steps('minecraftServerSettings').minecraftUser]",
