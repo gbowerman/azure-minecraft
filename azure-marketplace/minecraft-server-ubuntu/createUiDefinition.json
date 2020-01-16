@@ -107,7 +107,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Minecraft username",
                         "defaultValue": "",
-                        "toolTip": "Name of a valid Minecrft user account",
+                        "toolTip": "Name of a valid Minecraft user account",
                         "constraints": {
                             "required": true,
                             "regex": "^[A-Za-z0-9_]{3,16}$",
