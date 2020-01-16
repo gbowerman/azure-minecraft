@@ -19,31 +19,27 @@
         "description": "Your Minecraft user name"
       }
     },
-    "authenticationType": {
-      "type": "string",
-      "allowedValues": [
-        "password",
-        "sshPublicKey"
-      ]
-    },
     "adminUsername": {
       "type": "string",
       "metadata": {
         "description": "User name for the Virtual Machine."
       }
     },
-    "adminPassword": {
-      "type": "securestring",
-      "defaultValue": "",
+    "authenticationType": {
+      "type": "string",
+      "defaultValue": "sshPublicKey",
+      "allowedValues": [
+        "password",
+        "sshPublicKey"
+      ],
       "metadata": {
-        "description": "Password for the Virtual Machine. Not used if authenticationType of sshPublicKey."
+        "description": "Type of authentication to use on the Virtual Machine."
       }
     },
-    "sshPublicKey": {
-      "type": "string",
-      "defaultValue": "",
+    "adminPasswordOrKey": {
+      "type": "securestring",
       "metadata": {
-        "description": "SSH RSA public key file as a string. Not used if authenticationType of password."
+        "description": "Password or ssh key for the Virtual Machine."
       }
     },
     "dnsNameForPublicIP": {
@@ -121,39 +117,29 @@
     "lowerCaseDNSName": "[toLower(parameters('dnsNameForPublicIP'))]",
     "imagePublisher": "Canonical",
     "imageOffer": "UbuntuServer",
-    "OSDiskName": "osdiskforlinuxsimple",
     "networkSecurityGroupName": "[concat(variables('lowerCaseDNSName'), 'nsg')]",
     "nicName": "minecraftvmnic",
     "addressPrefix": "10.0.0.0/16",
-    "subnetName": "subnet",
     "subnetPrefix": "10.0.0.0/24",
-    "storageAccountType": "Standard_LRS",
     "publicIPAddressName": "minecraftpublicip",
     "publicIPAddressType": "Dynamic",
     "oSVersion": "18.04-LTS",
     "vmName": "minecraftvm",
-    "sshKeyPath": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
-    "linuxConfiguration_sshPublicKey": {
-      "disablePasswordAuthentication": "true",
+    "linuxConfiguration": {
+      "disablePasswordAuthentication": true,
       "ssh": {
         "publicKeys": [
           {
-            "path": "[variables('sshKeyPath')]",
-            "keyData": "[parameters('sshPublicKey')]"
+            "path": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
+            "keyData": "[parameters('adminPasswordOrKey')]"
           }
         ]
       }
     },
-    "linuxConfiguration_password": {},
-    "linuxConfiguration": "[variables(concat('linuxConfiguration_', parameters('authenticationType')))]",
     "virtualNetworkName": "minecraftvnet",
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
-    "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "mcDownloadUri": "[uri(parameters('_artifactsLocation'), 'mcdownload.py')]",
     "mcSetupUri": "[uri(parameters('_artifactsLocation'), 'mcsetup.py')]",
-    "mcUpgradeUri": "[uri(parameters('_artifactsLocation'), 'mcupgrade.sh')]",
-    "computeApiVersion": "2019-03-01",
-    "networkApiVersion": "2019-09-01"
+    "mcUpgradeUri": "[uri(parameters('_artifactsLocation'), 'mcupgrade.sh')]"
   },
   "resources": [
     {
@@ -170,7 +156,7 @@
       }
     },
     {
-      "apiVersion": "[variables('networkApiVersion')]",
+      "apiVersion": "2019-09-01",
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[variables('networkSecurityGroupName')]",
       "location": "[variables('location')]",
@@ -208,7 +194,7 @@
       }
     },
     {
-      "apiVersion": "[variables('networkApiVersion')]",
+      "apiVersion": "2019-09-01",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('publicIPAddressName')]",
       "location": "[variables('location')]",
@@ -220,7 +206,7 @@
       }
     },
     {
-      "apiVersion": "[variables('networkApiVersion')]",
+      "apiVersion": "2019-09-01",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
       "location": "[variables('location')]",
@@ -247,7 +233,7 @@
       }
     },
     {
-      "apiVersion": "[variables('networkApiVersion')]",
+      "apiVersion": "2019-09-01",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName')]",
       "location": "[variables('location')]",
@@ -265,7 +251,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
               },
               "subnet": {
-                "id": "[variables('subnetRef')]"
+                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName')),'/subnets/subnet')]"
               }
             }
           }
@@ -273,7 +259,7 @@
       }
     },
     {
-      "apiVersion": "[variables('computeApiVersion')]",
+      "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[variables('vmName')]",
       "location": "[variables('location')]",
@@ -300,7 +286,7 @@
           "customData": "[base64(concat('#cloud-config\n\nruncmd:\n- r=60 && for i in $(seq 1 $r); do apt-get update && break || [ $i == $r ] && break 0 || sleep 5; done\n- r=60 && for i in $(seq 1 $r); do apt install -y default-jre && break || [ $i == $r ] && break 0 || sleep 5; done\n- mkdir /srv/minecraft_server\n- adduser --system --no-create-home --home /srv/minecraft_server minecraft\n- addgroup --system minecraft\n- chown -R minecraft /srv/minecraft_server\n- curl ', variables('mcSetupUri'), ' > /srv/minecraft_server/mcsetup.py\n- chmod +x /srv/minecraft_server/mcsetup.py\n- /srv/minecraft_server/mcsetup.py\n- systemctl start minecraft-server\n- systemctl enable minecraft-server\n- curl', variables('mcDownloadUri'), ' > /srv/minecraft_server/mcdownload.py\n- curl ', variables('mcUpgradeUri'), ' > /srv/minecraft_server/mcupgrade.sh\n- chmod +x /srv/minecraft_server/mcdownload.py /srv/minecraft_server/mcupgrade.sh'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]",
-          "linuxConfiguration": "[variables('linuxConfiguration')]"
+          "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
         },
         "storageProfile": {
           "imageReference": {

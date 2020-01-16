@@ -1,4 +1,5 @@
 {
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
     "handler": "Microsoft.Compute.MultiVm",
     "version": "0.1.2-preview",
     "parameters": {
@@ -8,7 +9,6 @@
                 "type": "Microsoft.Compute.UserNameTextBox",
                 "label": "VM username",
                 "toolTip": "Choose a username to be used to SSH to the Minecraft server virtual machine.",
-                "defaultValue": "mcuser",
                 "constraints": {
                     "required": true
                 },
@@ -107,6 +107,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Minecraft username",
                         "defaultValue": "",
+                        "toolTip": "Name of a valid Minecrft user account",
                         "constraints": {
                             "required": true,
                             "regex": "^[A-Za-z0-9_]{3,16}$",
@@ -146,6 +147,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "level-name",
                         "defaultValue": "world",
+                        "toolTip": "Optionally name your world",
                         "visible": true
                     },
                     {
@@ -260,6 +262,7 @@
                         "name": "level-seed",
                         "type": "Microsoft.Common.TextBox",
                         "label": "level-seed",
+                        "toolTip": "Leave blank or enter any string which will be used as a random seed for the level",
                         "visible": true
                     }
                 ]
