@@ -221,7 +221,7 @@
         },
         "subnets": [
           {
-            "name": "[variables('subnetName')]",
+            "name": "subnet",
             "properties": {
               "addressPrefix": "[variables('subnetPrefix')]",
               "networkSecurityGroup": {
