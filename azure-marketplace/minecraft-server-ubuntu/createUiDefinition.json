@@ -15,7 +15,7 @@
                 "osPlatform": "Linux"
             },
             {
-                "name": "adminCredentials",
+                "name": "SSHCredentials",
                 "type": "Microsoft.Compute.CredentialsCombo",
                 "label": {
                     "authenticationType": "Authentication type",
@@ -271,9 +271,8 @@
         "outputs": {
             "location": "[location()]",
             "adminUserName": "[basics('adminUserName')]",
-            "authenticationType": "[basics('adminCredentials').authenticationType]",
-            "adminPassword": "[basics('adminCredentials').password]",
-            "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
+            "authenticationType": "[basics('SSHCredentials').authenticationType]",
+            "adminPasswordOrKey": "[coalesce(basics('SSHCredentials').password, basics('SSHCredentials').sshPublicKey)]",
             "dnsNameForPublicIP": "[steps('virtualMachineSettings').dnsNameForPublicIP.domainNameLabel]",
             "virtualMachineSize": "[steps('virtualMachineSettings').virtualMachineSize]",
             "minecraftUser": "[steps('minecraftServerSettings').minecraftUser]",
