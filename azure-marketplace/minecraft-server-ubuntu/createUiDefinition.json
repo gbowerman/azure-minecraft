@@ -24,9 +24,9 @@
                     "sshPublicKey": "SSH public key"
                 },
                 "toolTip": {
-                    "authenticationType": "",
-                    "password": "",
-                    "sshPublicKey": ""
+                    "authenticationType": "Authentication Type for the Virtual Machine",
+                    "password": "Password for the Virtual Machine",
+                    "sshPublicKey": "SSH Public Key for the Virtual Machine"
                 },
                 "constraints": {
                     "required": true,
@@ -34,8 +34,7 @@
                     "customValidationMessage": "The password must contain at least 12 characters, with at least 1 letter and 1 number. Alphanumerical (@#$%^&*-_!+=[]{}|\\:',.?/`~\"();)and special characters are allowed"
                 },
                 "options": {
-                    "hideConfirmation": false,
-                    "hidePassword": true
+                    "hideConfirmation": false
                 },
                 "osPlatform": "Linux",
                 "visible": true
