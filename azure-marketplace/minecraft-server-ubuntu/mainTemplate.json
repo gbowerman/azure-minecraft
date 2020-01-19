@@ -251,7 +251,6 @@
       ],
       "properties": {
         "primary": true,
-        "enableAcceleratedNetworking": true,
         "ipConfigurations": [
           {
             "name": "ipconfig1",
