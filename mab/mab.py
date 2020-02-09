@@ -1,6 +1,7 @@
 '''mab.py - Minecraft Azure Bridge'''
 import os
 import sys
+import time
 
 from azure.common.credentials import ServicePrincipalCredentials
 from azure.mgmt.compute import ComputeManagementClient
@@ -18,6 +19,7 @@ X_LEN = 37
 Y_LEN = 29
 RUNNING_BLOCK = "minecraft:green_concrete"
 DEALLOC_BLOCK = "minecraft:red_concrete"
+TRANSIENT_BLOCK = "minecraft:gray_concrete"
 DEFAULT_BLOCK = "minecraft:quartz_block"
 DEFAULT_SIGN = "minecraft:birch_sign[rotation=8]"
 
@@ -49,14 +51,18 @@ def draw_sign(x_coord, height, y_coord, text1, text2, text3):
 
 def draw_vm(x_coord, height, y_coord, power_state):
     '''create a string that draws a VM in a function file'''
+
+    block = DEFAULT_BLOCK
+    fill_line = f"fill ~{x_coord} ~{height} ~{y_coord} ~{x_coord - 3} ~{height + 3} ~{y_coord} {block}\n"
+
     if  power_state == "VM running":
         block = RUNNING_BLOCK
     elif power_state == "VM deallocated":
         block = DEALLOC_BLOCK
     else:
-        block = DEFAULT_BLOCK
+        block = TRANSIENT_BLOCK
 
-    fill_line = f"fill ~{x_coord} ~{height} ~{y_coord} ~{x_coord - 1} ~{height + 1} ~{y_coord + 1} {block}"
+    fill_line += f"fill ~{x_coord - 1} ~{height + 1} ~{y_coord} ~{x_coord - 2} ~{height + 2} ~{y_coord} {block}"
     return fill_line
 
 
@@ -86,15 +92,16 @@ def write_vm_function(client, vm_list):
         name = vm.name
         resource_group = get_rg_from_id_str(vm.id)
         power_state = client.virtual_machines.get(resource_group, name, expand='instanceView').instance_view.statuses[1].display_status
-        instance_view = client.virtual_machines.get(resource_group, name, expand='instanceView').instance_view
-        # print(instance_view)
+        # instance_view = client.virtual_machines.get(resource_group, name, expand='instanceView').instance_view
+        #w_vm
+        #print(instance_view)
         # get draw VM string
         draw_vm_str = draw_vm(x, GROUND_HEIGHT, y, power_state)
         # get draw sign string
         draw_sign_str = draw_sign(x, GROUND_HEIGHT, y - 1, f'{name}', f'{resource_group}', power_state)
         function_str += f'{draw_vm_str}\n{draw_sign_str}\n'
         # decrement x coordinate by 3
-        x -= 3
+        x -= 5
     # write list VMs string to function file
     write_to_file(LIST_VMS_FUNCTION_FILE, function_str)
     #print(function_str)
@@ -108,9 +115,11 @@ def main():
     # get an Azure client connection
     client = get_az_mgmt_client()
 
-    # list the VMs in subscription
-    vm_list = get_vm_list(client)
-    write_vm_function(client, vm_list)
+    while(True):
+        # list the VMs in subscription
+        vm_list = get_vm_list(client)
+        write_vm_function(client, vm_list)
+        time.sleep(10)
 
 
 if __name__ == "__main__":
