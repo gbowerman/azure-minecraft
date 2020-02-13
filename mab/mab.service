@@ -1,0 +1,12 @@
+[Unit]
+Description=Minecraft Azure Bridge Service
+After=rc-local.service
+[Service]
+WorkingDirectory=/home/guybo/mab
+ExecStart=/usr/bin/python3 /home/guybo/mab/mab.py
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+Alias=mab.service
