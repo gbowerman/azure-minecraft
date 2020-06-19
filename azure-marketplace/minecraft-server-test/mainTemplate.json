@@ -100,6 +100,13 @@
       "metadata": {
         "description": "Add a seed for your world"
       }
+    },
+    "online-mode": {
+      "type": "string",
+      "defaultValue": "true",
+      "metadata": {
+        "description": "Turn off online mode"
+      }
     }
   },
   "variables": {
@@ -258,7 +265,8 @@
         "enablecommandblock": "[parameters('enable-command-block')]",
         "spawnmonsters": "[parameters('spawn-monsters')]",
         "generatestructures": "[parameters('generate-structures')]",
-        "levelseed": "[parameters('level-seed')]"
+        "levelseed": "[parameters('level-seed')]",
+        "onlinemode": "[parameters('online-mode')]"
       },
       "properties": {
         "hardwareProfile": {
