@@ -263,6 +263,26 @@
                         "label": "level-seed",
                         "toolTip": "Leave blank or enter any string which will be used as a random seed for the level",
                         "visible": true
+                    },
+                    {
+                        "name": "online-mode",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "online-mode",
+                        "defaultValue": "true",
+                        "toolTip": "If false, non-premium members can join",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "false",
+                                    "value": "false"
+                                },
+                                {
+                                    "label": "true",
+                                    "value": "true"
+                                }
+                            ]
+                        },
+                        "visible": true
                     }
                 ]
             }
@@ -282,7 +302,8 @@
             "enable-command-block": "[steps('minecraftServerSettings').enable-command-block]",
             "spawn-monsters": "[steps('minecraftServerSettings').spawn-monsters]",
             "generate-structures": "[steps('minecraftServerSettings').generate-structures]",
-            "level-seed": "[steps('minecraftServerSettings').level-seed]"
+            "level-seed": "[steps('minecraftServerSettings').level-seed]",
+            "online-mode": "[steps('minecraftServerSettings').online-mode]"
         }
     }
 }

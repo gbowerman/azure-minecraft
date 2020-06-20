@@ -73,6 +73,7 @@ enable-command-block={tag_dict['enablecommandblock']}
 spawn-monsters={tag_dict['spawnmonsters']}
 generate-structures={tag_dict['generatestructures']}
 level-seed={tag_dict['levelseed']}
+online-mode={tag_dict['onlinemode']}
 """
     write_file(f'{MCFOLDER}server.properties', srv_str)
 
